@@ -226,4 +226,4 @@ The patched library files are in [`adafruit-patch/`](./adafruit-patch/), and als
 - **Sweekar Mandavkar**
 - **Dhruv Maurya**
 
-**K. J. Somaiya Institute of Technology, Mumbai**
+**K. J. Somaiya school of engineering, Vidyavihar Mumbai**
