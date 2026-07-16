@@ -210,6 +210,15 @@ Serve `index.html` via Live Server (port 5501) or any static server.
 
 ---
 
+## Adafruit Fingerprint Library Patch
+
+This project uses a patched version of `Adafruit_Fingerprint` that adds **UPCHAR / DOWNCHAR** support for raw template upload and download — enabling fingerprint backup, restore, and sensor cloning.
+
+The patched library files are in [`adafruit-patch/`](./adafruit-patch/), and also maintained as a standalone repository:
+**[github.com/Nimishpp06/adafruit-fingerprint-updown](https://github.com/Nimishpp06/adafruit-fingerprint-updown)**
+
+---
+
 ## Team
 
 - **Nimish Patil**
