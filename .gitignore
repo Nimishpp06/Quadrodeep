@@ -1,14 +1,32 @@
-node_modules
-.opencode/
+# Dependencies
+node_modules/
+
+# Environment
 .env
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.idea/
+.vscode/
+.opencode/
+
+# Development artifacts
+python/
 nul
+CONTEXT_DUMP.md
+lab_professor_modal.txt
+
+# Archives
 *.zip
 *.7z
 *.rar
-.DS_Store
-Thumbs.db
+
+# Logs
 *.log
-.idea/
-.vscode/
-CONTEXT_DUMP.md
-lab_professor_modal.txt
+
+# Hardware design (if kept separately)
+summerinternship.kicad_pcb
+summerinternship.kicad_sch
