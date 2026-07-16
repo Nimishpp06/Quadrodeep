@@ -1,0 +1,2757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadrodeep Portal | Somaiya RFID & Fingerprint Access</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Top Bar */
+        .brand-top-bar { background-color: #800000; color: white; padding: 12px 24px; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; }
+        .top-bar-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .left-section { display: flex; align-items: center; gap: 15px; }
+        .right-section { display: flex; align-items: center; gap: 15px; }
+        .quadrodeep-logo { height: 45px; width: auto; }
+        .somaiya-logo { height: 40px; width: auto; background: white; padding: 5px; border-radius: 4px; }
+        .hamburger-menu { cursor: pointer; padding: 8px; border-radius: 4px; transition: background 0.3s; display: flex; align-items: center; }
+        .hamburger-menu:hover { background: rgba(255,255,255,0.2); }
+        
+        /* Dropdown Menu */
+        .dropdown-menu { display: none; position: absolute; top: 70px; right: 24px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 280px; z-index: 1000; border: 1px solid #e0e0e0; }
+        .dropdown-menu.active { display: block; }
+        .dropdown-item { padding: 14px 20px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px; transition: background 0.2s; color: #333; font-size: 0.9rem; }
+        .dropdown-item:hover { background: #f5f5f5; }
+        .dropdown-item:last-child { border-bottom: none; }
+        .dropdown-item .material-icons { color: #0056b3; font-size: 1.2rem; }
+        .dropdown-header { padding: 12px 20px; background: #f8f9fa; border-bottom: 1px solid #eee; font-weight: 600; color: #800000; font-size: 0.85rem; text-transform: uppercase; }
+        
+        /* Identity Bar */
+        .sub-identity-bar { background-color: white; padding: 20px 24px; border-bottom: 1px solid #e0e0e0; }
+        .identity-content { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 15px; }
+        .logo-icon { font-size: 2.5rem !important; color: #800000; }
+        
+        /* Workspace Layouts */
+        .workspace-container { max-width: 1400px; margin: 40px auto; width: 100%; padding: 0 24px; flex: 1; }
+        .hidden { display: none !important; }
+        .portal-main-card { background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; padding: 24px; margin-bottom: 24px; }
+        .badge { background-color: #e8f0fe; color: #1a73e8; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        
+        .form-group { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+        input, select, textarea { padding: 10px 14px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; width: 100%; background: #fff; }
+        
+        /* Buttons */
+        .portal-btn { background-color: #0056b3; color: white; border: none; padding: 10px 18px; font-size: 0.9rem; font-weight: 600; border-radius: 4px; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .portal-btn:hover { background-color: #004085; }
+        .portal-btn-success { background-color: #2e7d32; }
+        .portal-btn-success:hover { background-color: #1b5e20; }
+        .portal-btn-danger { background-color: #c5221f; }
+        .portal-btn-danger:hover { background-color: #a01816; }
+        
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; font-weight: 600; font-size: 0.85rem; color: #555; text-transform: uppercase; }
+        
+        .metric-card { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 20px; }
+        
+        /* Refined Soft Blue LCD Display Styling */
+        .calculator-terminal {
+            background-color: #D6E4F0; 
+            color: #1E3F66; 
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #82A2B4; 
+            box-shadow: inset 0px 4px 8px rgba(30, 63, 102, 0.15); 
+            margin-top: 24px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            font-weight: 600;
+            overflow-x: auto;
+        }
+        .calculator-terminal .calc-value { font-weight: 800; color: #0056b3; transition: color 0.3s; }
+        .calculator-terminal .calc-alert { font-weight: 800; color: #c5221f; }
+        .calculator-terminal .calc-warn { font-weight: 800; color: #b06000; }
+
+        /* Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; border-radius: 8px; padding: 32px; max-width: 950px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e0e0e0; }
+        .close-modal { cursor: pointer; font-size: 1.5rem; color: #666; }
+        
+        .filter-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; padding: 16px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e0e0e0; }
+        .filter-item { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
+        .filter-item label { font-size: 0.85rem; font-weight: 600; color: #555; }
+        
+        .chart-container { position: relative; height: 300px; margin: 20px 0; }
+        
+        /* Badges */
+        .status-badge { padding: 6px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: inline-block; }
+        .status-present { background: #e6f4ea; color: #137333; border: 1px solid #b7e1cd; }
+        .status-absent { background: #fce8e6; color: #c5221f; border: 1px solid #f9cb9c; }
+        .status-late { background: #fef7e0; color: #b06000; border: 1px solid #fce8b2; }
+        /* Timetable session status badges */
+        .status-live { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; animation: tpulse 2s infinite; }
+        .status-upcoming { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .status-over { background: #f5f5f5; color: #757575; border: 1px solid #e0e0e0; }
+        @keyframes tpulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 24px; }
+        footer { background: #222; color: #aaa; padding: 20px; text-align: right; margin-top: auto; border-top: 4px solid #800000; font-size: 0.85rem; }
+        footer .footer-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        
+        .pulse-dot { width: 8px; height: 8px; background: #c5221f; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; transition: background 0.3s;}
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        
+        .action-btn-group { display: flex; gap: 6px; }
+    </style>
+</head>
+<body>
+    <header class="brand-top-bar">
+        <div class="top-bar-content">
+            <div class="left-section">
+                <img src="quadrodeep-logo.png" alt="QuadroDeep" class="quadrodeep-logo" onerror="this.style.display='none'">
+                <div>QUADRODEEP SYSTEM TERMINAL</div>
+            </div>
+            <div class="right-section">
+                <img src="somaiya-logo.png" alt="Somaiya Vidyavihar" class="somaiya-logo" onerror="this.style.display='none'">
+                <div class="hamburger-menu" onclick="toggleDropdown()">
+                    <span class="material-icons" style="color: white; font-size: 1.5rem;">menu</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="dropdownMenu" class="dropdown-menu">
+        <div id="adminMenuItems" class="hidden">
+            <div class="dropdown-header">Admin Controls</div>
+            <div class="dropdown-item" onclick="openModal('timetableModal')"><span class="material-icons">calendar_today</span> Timetable Manager</div>
+            <div class="dropdown-item" onclick="openModal('labAssignModal')"><span class="material-icons">assignment</span> Lab Assignment</div>
+            <div class="dropdown-item" onclick="openModal('labProfessorModal')"><span class="material-icons">group_work</span> Manage Lab Professors</div>
+            <div class="dropdown-item" onclick="openModal('manualAttendanceModal')"><span class="material-icons">edit_note</span> Global Attendance Logs</div>
+            <div class="dropdown-item" onclick="openModal('addUserModal')"><span class="material-icons">person_add</span> Add User</div>
+            <div class="dropdown-item" onclick="openModal('updateRfidModal')"><span class="material-icons">credit_card</span> Update RFID</div>
+            <div class="dropdown-item" onclick="openModal('updateFingerprintModal')"><span class="material-icons">fingerprint</span> Update Fingerprint</div>
+            <div class="dropdown-item" onclick="openModal('addLabModal')"><span class="material-icons">meeting_room</span> Add Lab / ESP Scanner</div>
+            <div class="dropdown-item" onclick="openModal('vacationModal')"><span class="material-icons">event_busy</span> Vacation Mode</div>
+            <div class="dropdown-item" onclick="openModal('changePasswordModal')"><span class="material-icons">lock</span> Change Password</div>
+            <div class="dropdown-item" onclick="openModal('reportBugModal')"><span class="material-icons">bug_report</span> Report Bug</div>
+        </div>
+        
+        <div id="professorMenuItems" class="hidden">
+            <div class="dropdown-header">Faculty Controls</div>
+            <div class="dropdown-item" onclick="openModal('profTimetableModal')"><span class="material-icons">calendar_today</span> View My Timetable</div>
+            <div class="dropdown-item" onclick="openModal('espModeModal')"><span class="material-icons">settings</span> Configure Lab ESP Mode</div>
+            <div class="dropdown-item" onclick="openModal('profManualAttendanceModal')"><span class="material-icons">edit_note</span> Assigned Lab Attendance</div>
+            <div class="dropdown-item" onclick="openModal('changePasswordModal')"><span class="material-icons">lock</span> Change Password</div>
+            <div class="dropdown-item" onclick="openModal('reportBugModal')"><span class="material-icons">bug_report</span> Report Bug</div>
+        </div>
+        
+        <div id="studentMenuItems" class="hidden">
+            <div class="dropdown-header">Student Controls</div>
+            <div class="dropdown-item" onclick="openModal('studentTimetableModal')"><span class="material-icons">calendar_today</span> My Timetable</div>
+            <div class="dropdown-item" onclick="openModal('attendanceHistoryModal')"><span class="material-icons">history</span> Attendance History</div>
+            <div class="dropdown-item" onclick="openModal('changePasswordModal')"><span class="material-icons">lock</span> Change Password</div>
+            <div class="dropdown-item" onclick="openModal('reportBugModal')"><span class="material-icons">bug_report</span> Report Issue</div>
+        </div>
+        
+        <div class="dropdown-item" onclick="logout()" style="background: #fff3f3;"><span class="material-icons" style="color: #c5221f;">logout</span> Logout</div>
+    </div>
+
+    <div class="sub-identity-bar">
+        <div class="identity-content">
+            <span class="material-icons logo-icon">sensors</span>
+            <div>
+                <h1 style="font-size:1.4rem; color:#111;">QUADRODEEP Access Portal</h1>
+                <p style="font-size:0.85rem; color:#666;">Somaiya Institute Connected Ecosystem Hub</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginPage" class="workspace-container">
+        <div class="portal-main-card" style="max-width:500px; margin:40px auto; padding: 30px;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <span class="material-icons" style="font-size: 3rem; color: #0056b3;">account_circle</span>
+                <h2 style="font-size:1.6rem; color:#333; margin-top: 10px;">Secure Account Login</h2>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">Enter your Somaiya credentials to proceed</p>
+            </div>
+            
+            <form onsubmit="handleLogin(event)" class="form-group">
+                <div>
+                    <label style="font-weight: 600;">Institutional Email ID</label>
+                    <input type="email" id="loginEmail" required placeholder="name@somaiya.edu" style="padding: 12px; margin-top: 5px;">
+                </div>
+                <div>
+                    <label style="font-weight: 600;">Account Password</label>
+                    <div style="position: relative; margin-top: 5px;">
+                        <input type="password" id="loginPassword" required placeholder="Enter password" style="width: 100%; padding: 12px; padding-right: 40px;">
+                        <span class="material-icons" id="toggleLoginPwd" onclick="toggleVisibility('loginPassword', 'toggleLoginPwd')" style="position: absolute; right: 10px; top: 12px; cursor: pointer; color: #666; font-size: 1.2rem;">visibility</span>
+                    </div>
+                </div>
+                <div id="loginError" style="background:#fce8e6; color:#c5221f; padding:12px; border-radius:4px; display:none; font-size: 0.9rem;"></div>
+                <button type="submit" class="portal-btn" style="width:100%; padding: 14px; font-size: 1.05rem; margin-top: 10px;">Authenticate & Enter</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="mainInterface" class="workspace-container hidden">
+        <div class="portal-main-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span id="roleBadge" class="badge">USER</span>
+                <strong style="font-size:1.1rem;">Welcome, <span id="navUserName">User Node</span></strong>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span class="pulse-dot" id="serverPulse"></span>
+                <span style="font-size:0.85rem; color:#c5221f;" id="serverStatusText">Disconnected</span>
+            </div>
+        </div>
+
+        <div id="adminDashboard" class="hidden">
+            <div class="portal-main-card">
+                <h3 style="margin-bottom:16px; color:#0056b3;">Analytics Dashboard</h3>
+                <div class="filter-bar" style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+                    <div class="filter-item">
+                        <label>View Type</label>
+                        <select id="filterViewType" onchange="updateAnalytics()">
+                            <option value="all">All Batches Overview</option>
+                            <option value="detailed">Detailed Student View</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>Select Batch</label>
+                        <select id="filterBatch" onchange="updateAnalytics()">
+                            <option value="">Awaiting Server...</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>Select Lab</label>
+                        <select id="filterLab" onchange="updateAnalytics()">
+                            <option value="">Awaiting Server...</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>Select Student</label>
+                        <select id="filterStudent" onchange="updateAnalytics()">
+                            <option value="">Awaiting Server...</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>Time Period</label>
+                        <select id="adminTimeFilter" onchange="updateAnalytics()">
+                            <option value="today" selected>Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="all">All Time</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="chart-container"><canvas id="attendanceChart"></canvas></div>
+                    <div class="chart-container"><canvas id="labUsageChart"></canvas></div>
+                </div>
+
+                <div class="calculator-terminal" id="adminCalcTerminal">
+ =======================================================
+[  ADMINISTRATIVE GLOBAL DATA ENGINE OUTPUT TERMINAL    ]
+ =======================================================
+ GLOBAL ATTENDANCE RATE  : [ <span class="calc-value" id="calcAdminYield">0.00 %</span>           ]
+ TOTAL ACTIVE ESP NODES  : [ <span class="calc-value" id="calcAdminNodes">00000 / 00000</span>    ]
+ TOTAL REGISTERED USERS  : [ <span class="calc-value" id="calcAdminUsers">00000 PROFILES</span>   ]
+ HIGHEST YIELD BATCH     : [ <span class="calc-value" id="calcAdminBatch">AWAITING DATA</span>    ]
+ MOST UTILIZED LAB ROOM  : [ <span class="calc-value" id="calcAdminLab">AWAITING DATA</span>    ]
+ HARDWARE ANOMALY ALERTS : [ <span class="calc-alert" id="calcAdminAlerts">00000 ISSUES</span>     ]
+ =======================================================
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="metric-card">
+                    <div style="font-size:0.85rem; color:#666; text-transform:uppercase;">Registered Profiles</div>
+                    <div style="font-size:2rem; font-weight:700; color:#0056b3;" id="totalUsers">0</div>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size:0.85rem; color:#666; text-transform:uppercase;">Connected Hardware Scanners</div>
+                    <div style="font-size:2rem; font-weight:700; color:#2e7d32;" id="totalLabs">0</div>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size:0.85rem; color:#666; text-transform:uppercase;">Global Operational Rate</div>
+                    <div style="font-size:2rem; font-weight:700; color:#b06000;" id="todayAttendance">0.0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="professorDashboard" class="hidden">
+            <div class="portal-main-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h3 style="color:#0056b3;">Assigned Laboratory Hub</h3>
+                    <span class="badge" id="profPrimaryLabBadge" style="background:#fff3e0; color:#e65100; font-weight:bold;">Primary Lab: Unassigned (Awaiting Server)</span>
+                </div>
+                <div class="filter-bar">
+                    <div class="filter-item">
+                        <label>Time Range Analysis</label>
+                        <select id="profTimeFilter" onchange="updateProfAnalytics()">
+                            <option value="today">Today's Sessions</option>
+                            <option value="week" selected>Past Week Trends</option>
+                            <option value="month">Monthly Overview</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>Target Batch</label>
+                        <select id="profFilterBatch" onchange="updateProfAnalytics()">
+                            <option value="">Awaiting Server...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-container" style="height:300px;"><canvas id="profAnalyticsChart"></canvas></div>
+
+                <div class="calculator-terminal" id="profCalcTerminal">
+ =======================================================
+[  FACULTY LAB SCANNERS MONITORING TERMINAL             ]
+ =======================================================
+ ACTIVE LAB NODE         : [ <span class="calc-value" id="calcProfNode">AWAITING DATA</span>    ]
+ SESSION TURNOUT         : [ <span class="calc-value" id="calcProfTurnout">0 / 0 (0.0%)</span>     ]
+ AUTH METHOD USED (BIO)  : [ <span class="calc-value" id="calcProfBio">0.0 %</span>            ]
+ AUTH METHOD USED (RFID) : [ <span class="calc-value" id="calcProfRfid">0.0 %</span>            ]
+ LATE ENTRY REGISTERS    : [ <span class="calc-warn" id="calcProfLate">00000 STUDENTS</span>   ]
+ HIGH-RISK DEFAULTERS    : [ <span class="calc-alert" id="calcProfRisk">00000 STUDENTS</span>   ]
+ =======================================================
+                </div>
+            </div>
+
+            <div class="portal-main-card">
+                <h3 style="margin-bottom:16px; color:#c5221f;">At-Risk Students (Drop > 15%)</h3>
+                <div id="atRiskList" style="max-height:200px; overflow-y:auto;">
+                    <p style="color:#666; font-size:0.9rem;">Loading...</p>
+                </div>
+            </div>
+
+            <div class="portal-main-card">
+                <h3 style="margin-bottom:16px; color:#0056b3;">Authentication Mode Preference</h3>
+                <div class="chart-container" style="height:200px;"><canvas id="profModeChart"></canvas></div>
+            </div>
+
+            <div class="portal-main-card">
+                <h3 style="margin-bottom:16px; color:#0056b3;">Trigger Lab Device Session</h3>
+                <p style="font-size:0.85rem; color:#666; margin-bottom:16px;">
+                    Select a session from your timetable. Sessions auto-sorted: LIVE first, then upcoming.
+                </p>
+                
+                <div style="margin-bottom:16px;">
+                    <label style="font-size:0.85rem; font-weight:600; margin-bottom:4px; display:block;">Select Session</label>
+                    <select id="profSessionSelect" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc;">
+                        <option value="">Loading sessions...</option>
+                    </select>
+                </div>
+                
+                <div id="sessionDetails" style="display:none; margin-bottom:16px; padding:12px; background:#f5f5f5; border-radius:6px;">
+                    <div class="grid-2" style="font-size:0.9rem;">
+                        <div><strong>Lab:</strong> <span id="selLabName"></span></div>
+                        <div><strong>Batch:</strong> <span id="selBatchName"></span></div>
+                        <div><strong>Day:</strong> <span id="selDay"></span></div>
+                        <div><strong>Time:</strong> <span id="selTime"></span></div>
+                        <div><strong>Mode:</strong> <span id="selMode"></span></div>
+                        <div><strong>Status:</strong> <span id="selStatus"></span></div>
+                    </div>
+                </div>
+                
+                <button onclick="initializeSelectedSession()" class="portal-btn portal-btn-success" style="width:100%; padding:12px;" id="initSessionBtn" disabled>
+                    <span class="material-icons">play_arrow</span> Initialize Session & Send Biometrics to ESP32
+                </button>
+            </div>
+
+            <div id="sessionPanel" class="portal-main-card hidden">
+                <h3 style="margin-bottom:16px; color:#2e7d32;">Live Session Polling Register</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student Candidate</th>
+                            <th>Hardware Map Reference</th>
+                            <th>Live State</th>
+                            <th>Manual Override Correction Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceTable">
+                        <tr><td colspan="4" style="text-align:center;">No active polling streams detected. Waiting for hardware...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="studentDashboard" class="hidden">
+            <div class="grid-2">
+                <div class="portal-main-card" style="text-align:center;">
+                    <h3 style="margin-bottom:20px;">Personal Attendance Rate</h3>
+                    <div style="font-size:3.5rem; font-weight:700; color:#2e7d32;" id="attendancePercent">0%</div>
+                    <div style="color:#666; margin-top:8px;">Operational Clearance: <strong id="eligibilityStatus" style="color: #666;">Awaiting Data</strong></div>
+                    <div class="chart-container" style="height:180px; margin-top:20px;"><canvas id="studentAttendanceChart"></canvas></div>
+                </div>
+                <div class="portal-main-card">
+                    <h3 style="margin-bottom:16px;">Quick Metrical Ticks</h3>
+                    <div style="margin-bottom:12px; padding:12px; background:#e6f4ea; border-radius:6px; border-left:4px solid #2e7d32;">
+                        <div style="font-size:0.85rem; color:#666;">Verified Ticks</div>
+                        <div style="font-size:1.4rem; font-weight:700; color:#137333;" id="statPresent">0</div>
+                    </div>
+                    <div style="margin-bottom:12px; padding:12px; background:#fce8e6; border-radius:6px; border-left:4px solid #c5221f;">
+                        <div style="font-size:0.85rem; color:#666;">Absent Log Count</div>
+                        <div style="font-size:1.4rem; font-weight:700; color:#c5221f;" id="statAbsent">0</div>
+                    </div>
+                    <div style="padding:12px; background:#e8f0fe; border-radius:6px; border-left:4px solid #1a73e8;">
+                        <div style="font-size:0.85rem; color:#666;">Total Valid Opportunities</div>
+                        <div style="font-size:1.4rem; font-weight:700; color:#1a73e8;" id="statTotal">0</div>
+                    </div>
+                    <div style="margin-top:12px; padding:12px; background:#fff3e0; border-radius:6px; border-left:4px solid #e65100;">
+                        <div style="font-size:0.85rem; color:#666;">Punctuality Score (On-Time %)</div>
+                        <div style="font-size:1.4rem; font-weight:700; color:#e65100;" id="punctualityScore">0%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="portal-main-card">
+                <h3 style="margin-bottom:16px;">Recent Attendance History</h3>
+                <table>
+                    <thead>
+                        <tr><th>Timestamp</th><th>Laboratory Engine</th><th>Verification Status</th><th>Validation Method</th></tr>
+                    </thead>
+                    <tbody id="historyTable">
+                        <tr><td colspan="4" style="text-align:center;">No history records found in database...</td></tr>
+                    </tbody>
+                </table>
+                
+                <div class="calculator-terminal" id="studCalcTerminal">
+ =======================================================
+[  PERSONAL COMPLIANCE & ELIGIBILITY TERMINAL           ]
+ =======================================================
+ OVERALL ELIGIBILITY     : [ <span class="calc-value">0.00 %</span>           ]
+ BOARD STATUS            : [ <span class="calc-value" style="color:#666;">NO DATA YET</span>      ]
+ TOTAL PRESENT SCANS     : [ <span class="calc-value">00000 SESSIONS</span>   ]
+ TOTAL ABSENT LOGS       : [ <span class="calc-warn">00000 SESSIONS</span>   ]
+ TARGET SHORTFALL REQ.   : [ <span class="calc-value">00000 CLASSES</span>    ]
+ WEAKEST LAB ATTENDANCE  : [ <span class="calc-value">N/A</span>              ]
+ =======================================================
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="labAssignModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2><span class="material-icons" style="vertical-align: middle;">assignment</span> Assign Lab & Update Timetable</h2>
+                <span class="close-modal" onclick="closeModal('labAssignModal')">&times;</span>
+            </div>
+            <div class="form-group" style="padding: 0; border: none;">
+                <div>
+                    <label style="font-weight:600; color:#555;">Lab Target</label>
+                    <select id="assignLabId" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc;">
+                        <option value="">Awaiting Server...</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-weight:600; color:#555;">Optional: Update Lab Name</label>
+                    <input type="text" id="assignLabName" placeholder="Leave blank to keep current name">
+                </div>
+                <div>
+                    <label style="font-weight:600; color:#555;">Assign Professor</label>
+                    <select id="assignProfId" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc;">
+                        <option value="">Awaiting Server...</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-weight:600; color:#555;">Assign Target Batch</label>
+                    <select id="assignBatchId" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc;">
+                        <option value="">Awaiting Server...</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label style="font-weight:600; color:#555;">Day</label>
+                        <select id="assignDay" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc;">
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-weight:600; color:#555;">Start Time</label>
+                        <input type="time" id="assignStartTime" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc;">
+                    </div>
+                    <div>
+                        <label style="font-weight:600; color:#555;">End Time</label>
+                        <input type="time" id="assignEndTime" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc;">
+                    </div>
+                </div>
+                <button onclick="submitLabAssignment()" class="portal-btn" style="width:100%; padding:14px; margin-top:10px;">Save Assignment</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="timetableModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; margin-bottom: 24px; padding-bottom: 16px;">
+                <h2 style="font-size: 1.5rem; color: #333;">Timetable Manager</h2>
+                <span class="close-modal" onclick="closeModal('timetableModal')">&times;</span>
+            </div>
+            
+            <div class="form-group" style="padding:0; border:none; margin-bottom:24px; background:transparent;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 16px;">
+                    <div>
+                        <label style="font-size:0.9rem; color:#555; margin-bottom:8px; display:block; font-weight:600;">Select Batch</label>
+                        <select id="ttBatch" style="padding:12px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:0.95rem;">
+                            <option value="">Awaiting Server...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:0.9rem; color:#555; margin-bottom:8px; display:block; font-weight:600;">Select Day</label>
+                        <select id="ttDay" style="padding:12px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:0.95rem;">
+                            <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                            <option>Thursday</option><option>Friday</option><option>Saturday</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <div>
+                        <label style="font-size:0.9rem; color:#555; margin-bottom:8px; display:block; font-weight:600;">Lab / Scanner</label>
+                        <select id="ttLab" style="padding:12px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:0.95rem;">
+                            <option value="">Awaiting Server...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:0.9rem; color:#555; margin-bottom:8px; display:block; font-weight:600;">Start Time</label>
+                        <input type="time" id="ttStartTime" style="padding:12px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:0.95rem;">
+                    </div>
+                    <div>
+                        <label style="font-size:0.9rem; color:#555; margin-bottom:8px; display:block; font-weight:600;">End Time</label>
+                        <input type="time" id="ttEndTime" style="padding:12px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:0.95rem;">
+                    </div>
+                </div>
+                <button onclick="addNewTimetableEntry()" class="portal-btn" style="width:100%; padding:14px; font-size:1.05rem; font-weight:600; background-color:#0056b3; border-radius:4px;">Add to Timetable</button>
+            </div>
+            
+            <div style="background: #f8f9fa; border-radius: 4px; overflow: hidden; margin-top: 10px; border: 1px solid #e0e0e0;">
+                <table style="margin-top: 0;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 16px; border-bottom: 1px solid #e0e0e0;">Day</th>
+                            <th style="padding: 16px; border-bottom: 1px solid #e0e0e0;">Lab ID</th>
+                            <th style="padding: 16px; border-bottom: 1px solid #e0e0e0;">Batch</th>
+                            <th style="padding: 16px; border-bottom: 1px solid #e0e0e0;">Time</th>
+                            <th style="padding: 16px; border-bottom: 1px solid #e0e0e0;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timetableBody">
+                        <tr><td colspan="5" style="text-align:center; padding:24px; color:#666;">Fetching live data from Supabase API...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="addLabModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Lab Room (Unifies ESP Hardware)</h2>
+                <span class="close-modal" onclick="closeModal('addLabModal')">&times;</span>
+            </div>
+            <div class="form-group" style="background:#fff; padding:0; border:none;">
+                <div class="grid-2">
+                    <div>
+                        <label style="font-size:0.85rem; font-weight:600; color:#555;">Lab ID / ESP ID (Unique Alpha-Numeric Key)</label>
+                        <input type="text" id="newLabId" placeholder="e.g., IOT_01, AI_02">
+                    </div>
+                    <div>
+                        <label style="font-size:0.85rem; font-weight:600; color:#555;">Lab Room Name</label>
+                        <input type="text" id="newLabName" placeholder="e.g., IoT Advanced Laboratory">
+                    </div>
+                    <div>
+                        <label style="font-size:0.85rem; font-weight:600; color:#555;">Room Location Number</label>
+                        <input type="text" id="newRoomLocation" placeholder="e.g., Room 301, B-Block">
+                    </div>
+                    <div>
+                        <label style="font-size:0.85rem; font-weight:600; color:#555;">Assign Primary Supervising Professor</label>
+                        <select id="newLabProfessor">
+                            <option value="">Awaiting Server...</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button onclick="registerNewLab()" class="portal-btn" style="width:100%; margin-top:20px; padding:14px; background-color: #0056b3; font-weight: 700; font-size: 1rem;">
+                    Register Lab & Initialize Scanner Entry
+                </button>
+                
+                <h3 style="margin-top: 36px; font-size: 1.25rem; color: #333;">Active Registered Labs</h3>
+                <table style="margin-top: 12px;">
+                    <thead>
+                        <tr><th>Lab ID</th><th>Room Name</th><th>Location</th><th>Professor</th></tr>
+                    </thead>
+                    <tbody id="activeLabsBody">
+                        <tr><td colspan="4" style="text-align:center; color:#777; padding:20px;">Fetching from Database...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add User Profile</h2>
+                <span class="close-modal" onclick="closeModal('addUserModal')">&times;</span>
+            </div>
+            <div class="form-group">
+                <div class="grid-2">
+                    <div>
+                        <label style="font-weight: 700;">Select Identity Role</label>
+                        <select id="enrollRole" onchange="toggleUserFields()" required style="border: 2px solid #0056b3;">
+                            <option value="">Choose a role...</option>
+                            <option value="student">Student</option>
+                            <option value="professor">Professor</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div><label>Full Name</label><input type="text" id="enrollName" placeholder="Enter full name"></div>
+                    <div><label>Email ID</label><input type="email" id="enrollEmail" placeholder="name@somaiya.edu"></div>
+                </div>
+
+                <div class="grid-2" style="margin-top: 8px;">
+                    <div>
+                        <label style="font-weight: 600;">Account Password</label>
+                        <div style="display: flex; gap: 8px;">
+                            <div style="position: relative; flex: 1;">
+                                <input type="password" id="enrollPassword" required placeholder="Assign a secure password" style="width: 100%; padding-right: 36px;">
+                                <span class="material-icons" id="toggleEnrollPwd" onclick="toggleVisibility('enrollPassword', 'toggleEnrollPwd')" style="position: absolute; right: 8px; top: 10px; cursor: pointer; color: #666; font-size: 1.2rem;">visibility</span>
+                            </div>
+                            <button type="button" onclick="generateRandomPassword('enrollPassword', 'toggleEnrollPwd')" class="portal-btn" style="padding: 0 10px;" title="Auto-Generate Strong Password"><span class="material-icons">autorenew</span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="studentFields" class="grid-2 hidden" style="background:#fff3e0; padding:16px; border-radius:6px; margin-top: 10px; border:1px solid #ffcc80;">
+                    <div style="grid-column: span 2; margin-bottom: -10px;">
+                        <strong style="color:#e65100; font-size: 0.9rem;">Student Assignment Rules:</strong>
+                    </div>
+                    <div>
+                        <label style="font-weight: 600;">Assign to Target Batch</label>
+                        <select id="enrollBatch">
+                            <option value="">Awaiting Server...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="button" onclick="completeEnrollment()" class="portal-btn portal-btn-success" style="padding: 14px; font-size: 1.05rem;">Complete Registration</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="updateRfidModal" class="modal">
+        <div class="modal-content" style="max-width: 650px;">
+            <div class="modal-header">
+                <h2><span class="material-icons" style="vertical-align: middle;">credit_card</span> Update RFID</h2>
+                <span class="close-modal" onclick="closeModal('updateRfidModal')">&times;</span>
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="font-weight:600;">Select Lab Scanner</label>
+                <select id="rfidUpdateLabSelect" style="padding:10px;width:100%;border-radius:4px;border:1px solid #ccc;">
+                    <option value="">Select a Lab...</option>
+                </select>
+            </div>
+            <div style="margin-bottom:16px;">
+                <label style="font-weight:600;">Search Student</label>
+                <input type="text" id="rfidSearchInput" placeholder="Type name or email to search..." oninput="filterUpdateRfidList()" style="padding:12px;border:1px solid #ccc;border-radius:4px;width:100%;">
+            </div>
+            <div id="rfidStudentList" style="max-height:300px;overflow-y:auto;border:1px solid #e0e0e0;border-radius:4px;margin-bottom:16px;">
+                <div style="padding:16px;text-align:center;color:#777;">Loading students...</div>
+            </div>
+            <div id="rfidCaptureArea" style="display:none;background:#e8f0fe;padding:16px;border-radius:6px;margin:16px 0;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                    <strong id="rfidSelectedName" style="color:#1a73e8;"></strong>
+                    <span id="rfidSelectedBadge" class="badge"></span>
+                </div>
+                <button type="button" id="btnCaptureRFID" class="portal-btn" onclick="startUpdateRfid()">
+                    <span class="material-icons">radio_button_checked</span> Capture RFID
+                </button>
+                <div id="rfidEnrollmentStatus" style="display:none;padding:12px;background:#fff3e0;border-radius:4px;margin-top:12px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div class="spinner" style="width:16px;height:16px;border:2px solid #ffcc80;border-top-color:#e65100;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                        <span>Waiting for student to tap card on ESP...</span>
+                    </div>
+                </div>
+            </div>
+            <div id="rfidResultArea" style="display:none;padding:12px;background:#e6f4ea;border-radius:4px;margin-bottom:12px;"></div>
+        </div>
+    </div>
+
+    <div id="updateFingerprintModal" class="modal">
+        <div class="modal-content" style="max-width: 650px;">
+            <div class="modal-header">
+                <h2><span class="material-icons" style="vertical-align: middle;">fingerprint</span> Update Fingerprint</h2>
+                <span class="close-modal" onclick="closeModal('updateFingerprintModal')">&times;</span>
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="font-weight:600;">Select Lab Scanner</label>
+                <select id="fpUpdateLabSelect" style="padding:10px;width:100%;border-radius:4px;border:1px solid #ccc;">
+                    <option value="">Select a Lab...</option>
+                </select>
+            </div>
+            <div style="margin-bottom:16px;">
+                <label style="font-weight:600;">Search Student</label>
+                <input type="text" id="fpSearchInput" placeholder="Type name or email to search..." oninput="filterUpdateFpList()" style="padding:12px;border:1px solid #ccc;border-radius:4px;width:100%;">
+            </div>
+            <div id="fpStudentList" style="max-height:300px;overflow-y:auto;border:1px solid #e0e0e0;border-radius:4px;margin-bottom:16px;">
+                <div style="padding:16px;text-align:center;color:#777;">Loading students...</div>
+            </div>
+            <div id="fpCaptureArea" style="display:none;background:#fff3e0;padding:16px;border-radius:6px;margin:16px 0;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                    <strong id="fpSelectedName" style="color:#e65100;"></strong>
+                    <span id="fpSelectedBadge" class="badge"></span>
+                </div>
+                <button type="button" id="btnCaptureFP" class="portal-btn" onclick="startUpdateFingerprint()">
+                    <span class="material-icons">fingerprint</span> Capture Fingerprint
+                </button>
+                <div id="fpEnrollmentStatus" style="display:none;padding:12px;background:#fff3e0;border-radius:4px;margin-top:12px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div class="spinner" style="width:16px;height:16px;border:2px solid #ffcc80;border-top-color:#e65100;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                        <span>Waiting for student to scan finger on ESP...</span>
+                    </div>
+                </div>
+            </div>
+            <div id="fpResultArea" style="display:none;padding:12px;background:#e6f4ea;border-radius:4px;margin-bottom:12px;"></div>
+        </div>
+    </div>
+
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Change Account Password</h2>
+                <span class="close-modal" onclick="closeModal('changePasswordModal')">&times;</span>
+            </div>
+            <div class="form-group" style="padding: 0; border: none;">
+                <div>
+                    <label>Current Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="changePwdCurrent" placeholder="Enter current password" style="width: 100%; padding-right: 36px;">
+                        <span class="material-icons" id="toggleCurrentPwd" onclick="toggleVisibility('changePwdCurrent', 'toggleCurrentPwd')" style="position: absolute; right: 8px; top: 10px; cursor: pointer; color: #666; font-size: 1.2rem;">visibility</span>
+                    </div>
+                </div>
+                
+                <div>
+                    <label>New Password</label>
+                    <div style="display: flex; gap: 8px;">
+                        <div style="position: relative; flex: 1;">
+                            <input type="password" id="changePwdNew" placeholder="Enter new password" style="width: 100%; padding-right: 36px;">
+                            <span class="material-icons" id="toggleNewPwd" onclick="toggleVisibility('changePwdNew', 'toggleNewPwd')" style="position: absolute; right: 8px; top: 10px; cursor: pointer; color: #666; font-size: 1.2rem;">visibility</span>
+                        </div>
+                        <button type="button" onclick="generateRandomPassword('changePwdNew', 'toggleNewPwd')" class="portal-btn" style="padding: 0 10px;" title="Auto-Generate Strong Password"><span class="material-icons">autorenew</span></button>
+                    </div>
+                </div>
+
+                <div>
+                    <label>Confirm New Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="changePwdConfirm" placeholder="Confirm new password" style="width: 100%; padding-right: 36px;">
+                        <span class="material-icons" id="toggleConfirmPwd" onclick="toggleVisibility('changePwdConfirm', 'toggleConfirmPwd')" style="position: absolute; right: 8px; top: 10px; cursor: pointer; color: #666; font-size: 1.2rem;">visibility</span>
+                    </div>
+                </div>
+                
+                <button onclick="submitPasswordChange()" class="portal-btn" style="width: 100%; margin-top: 10px;">Update Password</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="labProfessorModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2><span class="material-icons" style="vertical-align: middle;">assignment_ind</span> Manage Lab-Professor Assignments</h2>
+                <span class="close-modal" onclick="closeModal('labProfessorModal')">&times;</span>
+            </div>
+            <div class="form-group" style="padding: 0; border: none;">
+                <div style="background:#e8f0fe; padding:16px; border-radius:6px; margin-bottom:20px;">
+                    <strong style="color:#1a73e8;">Lab-Professor Mapping</strong>
+                    <p style="font-size:0.85rem; margin-top:8px;">Assign professors to manage specific laboratory sessions. Each lab can be managed by multiple professors.</p>
+                </div>
+                <div>
+                    <label style="font-weight:600; color:#555;">Select Lab</label>
+                    <select id="profMgmtLabSelect" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc; margin-bottom:15px;">
+                        <option value="">Select a Lab...</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-weight:600; color:#555;">Assign Professor</label>
+                    <select id="profMgmtProfSelect" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc; margin-bottom:10px;">
+                        <option value="">Select a Professor...</option>
+                    </select>
+                    <button onclick="addLabProfessor()" class="portal-btn" style="width:100%; padding:10px;">Add Professor to Lab</button>
+                </div>
+                <div style="margin-top:20px;">
+                    <label style="font-weight:600; color:#555; margin-bottom:10px; display:block;">Current Assignments</label>
+                    <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+                        <thead>
+                            <tr style="background:#f5f5f5; border-bottom:2px solid #ddd;">
+                                <th style="padding:10px; text-align:left;">Lab Name</th>
+                                <th style="padding:10px; text-align:left;">Professor</th>
+                                <th style="padding:10px; text-align:center; width:80px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="labProfessorBody">
+                            <tr><td colspan="3" style="text-align:center; padding:20px; color:#777;">Loading assignments...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="manualAttendanceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2>Global Access Logs Matrix <span class="badge" style="background:#e8f0fe; color:#1a73e8;">Admin View</span></h2>
+                    <p style="font-size:0.85rem; color:#666; margin-top:4px;">Full permission view: Unrestricted validation overrides across all institutional labs.</p>
+                </div>
+                <span class="close-modal" onclick="closeModal('manualAttendanceModal')">&times;</span>
+            </div>
+            <div class="filter-bar">
+                <div class="filter-item">
+                    <label>Filter Lab Space</label>
+                    <select id="adminManualLabFilter" onchange="renderAdminManualAttendance()">
+                        <option value="">Awaiting Server...</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>Search Identity Name</label>
+                    <input type="text" id="searchStudent" placeholder="Type student profile identifier..." onkeyup="renderAdminManualAttendance()">
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Student Entity</th><th>Email Handle</th><th>Target Lab Location</th><th>Current Log State</th><th>Unrestricted Override Matrix Actions</th></tr>
+                </thead>
+                <tbody id="manualAttendanceBody">
+                    <tr><td colspan="5" style="text-align:center; color:#777;">No live log data available yet. Waiting for API route.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="profManualAttendanceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2>Assigned Environment Log Matrix <span class="badge" style="background:#ffebee; color:#c62828;">Professor View</span></h2>
+                    <p style="font-size:0.85rem; color:#b71c1c; margin-top:4px; font-weight:600;">
+                        🔒 Isolated Scope: Displaying your assigned hub logs only. Changing other lab logs is restricted.
+                    </p>
+                </div>
+                <span class="close-modal" onclick="closeModal('profManualAttendanceModal')">&times;</span>
+            </div>
+            <div class="filter-bar">
+                <div class="filter-item">
+                    <label>Active Working Lab Context</label>
+                    <input type="text" value="Awaiting Server Configuration - LOCKED SCOPE" disabled style="background:#f0f0f0; font-weight:700; color:#555;">
+                </div>
+                <div class="filter-item">
+                    <label>Quick Lookup Filter</label>
+                    <input type="text" id="profSearchStudent" placeholder="Type candidate profile name..." onkeyup="renderProfManualAttendance()">
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Student Entity</th><th>Assigned Lab Hub</th><th>Logged Attendance State</th><th>Override State Changes</th></tr>
+                </thead>
+                <tbody id="profManualAttendanceBody">
+                    <tr><td colspan="4" style="text-align:center; color:#777;">No student records found in database footprint.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="espModeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Configure Lab Scanner Attendance Mode</h2>
+                <span class="close-modal" onclick="closeModal('espModeModal')">&times;</span>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label style="margin-bottom: 8px; display: block; font-weight:600;">Select Target Lab Room to Configure</label>
+                    <select id="modeSelectLab">
+                        <option value="">Awaiting Server...</option>
+                    </select>
+                </div>
+                
+                <div style="display:flex; flex-direction:column; gap:12px; margin-top:10px;">
+                    <label style="display:flex; align-items:center; justify-content:flex-start; text-align:left; gap:16px; padding:16px; border:1px solid #ccc; border-radius:8px; cursor:pointer; background: #fff;">
+                        <input type="radio" name="espMode" value="attendance_rfid" checked style="width:20px; height:20px; margin:0; flex-shrink:0; cursor:pointer;">
+                        <div style="text-align:left;">
+                            <strong style="display:block; color:#333; margin-bottom:2px;">RFID Only (<code>attendance_rfid</code>)</strong>
+                            <div style="font-size:0.85rem; color:#666; line-height:1.3;">Accept attendance via institutional RFID smart-card scan only</div>
+                        </div>
+                    </label>
+                    
+                    <label style="display:flex; align-items:center; justify-content:flex-start; text-align:left; gap:16px; padding:16px; border:1px solid #ccc; border-radius:8px; cursor:pointer; background: #fff;">
+                        <input type="radio" name="espMode" value="attendance_fingerprint" style="width:20px; height:20px; margin:0; flex-shrink:0; cursor:pointer;">
+                        <div style="text-align:left;">
+                            <strong style="display:block; color:#333; margin-bottom:2px;">Fingerprint Only (<code>attendance_fingerprint</code>)</strong>
+                            <div style="font-size:0.85rem; color:#666; line-height:1.3;">Accept attendance via AS608 optical fingerprint validation mapping</div>
+                        </div>
+                    </label>
+                    
+                    <label style="display:flex; align-items:center; justify-content:flex-start; text-align:left; gap:16px; padding:16px; border:1px solid #ccc; border-radius:8px; cursor:pointer; background: #fff;">
+                        <input type="radio" name="espMode" value="attendance_both" style="width:20px; height:20px; margin:0; flex-shrink:0; cursor:pointer;">
+                        <div style="text-align:left;">
+                            <strong style="display:block; color:#333; margin-bottom:2px;">Strict Verification (<code>attendance_both</code>)</strong>
+                            <div style="font-size:0.85rem; color:#666; line-height:1.3;">High security: Requires matching BOTH valid RFID card + fingerprint authentication</div>
+                        </div>
+                    </label>
+                    
+                    <label style="display:flex; align-items:center; justify-content:flex-start; text-align:left; gap:16px; padding:16px; border:1px solid #ccc; border-radius:8px; cursor:pointer; background: #fff;">
+                        <input type="radio" name="espMode" value="attendance_either" style="width:20px; height:20px; margin:0; flex-shrink:0; cursor:pointer;">
+                        <div style="text-align:left;">
+                            <strong style="display:block; color:#333; margin-bottom:2px;">Flexible Access (<code>attendance_either</code>)</strong>
+                            <div style="font-size:0.85rem; color:#666; line-height:1.3;">Standard mode: Accepts either valid RFID tap OR fingerprint capture</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <button onclick="setESPMode()" class="portal-btn" style="margin-top:14px; width:100%; padding:12px;">
+                    Update Supabase Lab Scanner State
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="labProfessorModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2><span class="material-icons" style="vertical-align: middle;">assignment_ind</span> Manage Lab-Professor Assignments</h2>
+                <span class="close-modal" onclick="closeModal('labProfessorModal')">&times;</span>
+            </div>
+            <div class="form-group" style="padding: 0; border: none;">
+                <div style="background:#e8f0fe; padding:16px; border-radius:6px; margin-bottom:20px;">
+                    <strong style="color:#1a73e8;">Lab-Professor Mapping</strong>
+                    <p style="font-size:0.85rem; margin-top:8px;">Assign professors to manage specific laboratory sessions. Each lab can be managed by multiple professors.</p>
+                </div>
+                <div class="grid-2" style="margin-bottom: 16px;">
+                    <div>
+                        <label style="font-weight:600; color:#555;">Select Lab</label>
+                        <select id="profMgmtLabSelect" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc; margin-bottom:15px;">
+                            <option value="">Select a Lab...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-weight:600; color:#555;">Assign Professor</label>
+                        <select id="profMgmtProfSelect" style="padding:10px; width:100%; border-radius:4px; border:1px solid #ccc; margin-bottom:10px;">
+                            <option value="">Select a Professor...</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="addLabProfessor()" class="portal-btn" style="width:100%; padding:10px; margin-bottom: 20px;">Add Professor to Lab</button>
+                <h3 style="margin-bottom: 12px;">Current Assignments</h3>
+                <table style="margin-top: 0;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 12px; border-bottom: 1px solid #e0e0e0;">Lab</th>
+                            <th style="padding: 12px; border-bottom: 1px solid #e0e0e0;">Professor</th>
+                            <th style="padding: 12px; border-bottom: 1px solid #e0e0e0;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="labProfessorBody">
+                        <tr><td colspan="3" style="text-align:center; padding:20px; color:#777;">Loading assignments...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="profTimetableModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Assigned Faculty Operational Schedule</h2>
+                <span class="close-modal" onclick="closeModal('profTimetableModal')">&times;</span>
+            </div>
+            <table>
+                <thead><tr><th>Day</th><th>Lab Target Space</th><th>Target Student Batch</th><th>Allocated Time Windows</th></tr></thead>
+                <tbody id="profTimetableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="studentTimetableModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>My Class Schedule View</h2>
+                <span class="close-modal" onclick="closeModal('studentTimetableModal')">&times;</span>
+            </div>
+            <table>
+                <thead><tr><th>Day</th><th>Subject Laboratory Room</th><th>Operational Time Windows</th></tr></thead>
+                <tbody id="studentTimetableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="attendanceHistoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>My Full Attendance Matrix Logs</h2>
+                <span class="close-modal" onclick="closeModal('attendanceHistoryModal')">&times;</span>
+            </div>
+            <table>
+                <thead><tr><th>Date Mark</th><th>Lab Space</th><th>Logged State Status</th><th>Verification Trigger Device</th></tr></thead>
+                <tbody id="fullAttendanceHistoryBody">
+                    <tr><td colspan="4" style="text-align:center; color:#777;">No personal database logs found.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="reportBugModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Report Operational Node Exception</h2>
+                <span class="close-modal" onclick="closeModal('reportBugModal')">&times;</span>
+            </div>
+            <div class="form-group">
+                <label>Issue Description</label>
+                <textarea rows="4" placeholder="Describe the behavior error..."></textarea>
+                <button onclick="submitBugReport()" class="portal-btn">Submit Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="vacationModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2><span class="material-icons" style="vertical-align: middle;">event_busy</span> Vacation Mode</h2>
+                <span class="close-modal" onclick="closeModal('vacationModal')">&times;</span>
+            </div>
+            <div class="form-group" style="padding:0; border:none;">
+                <div id="vacationCurrentStatus" style="margin-bottom:20px;padding:16px;border-radius:6px;"></div>
+                <div id="vacationForm" style="display:none;">
+                    <div style="margin-bottom:16px;">
+                        <label style="font-weight:600;">Start Date</label>
+                        <input type="date" id="vacationStartDate" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;">
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label style="font-weight:600;">End Date</label>
+                        <input type="date" id="vacationEndDate" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;">
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label style="font-weight:600;">Reason</label>
+                        <input type="text" id="vacationReason" placeholder="e.g., Semester Break" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;">
+                    </div>
+                    <button onclick="startVacation()" class="portal-btn portal-btn-danger" style="width:100%;padding:12px;">Activate Vacation Mode</button>
+                </div>
+                <div id="vacationActiveActions" style="display:none;margin-top:16px;">
+                    <button onclick="endVacation()" class="portal-btn portal-btn-success" style="width:100%;padding:12px;">End Vacation Early</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div>&copy; 2026 <strong style="color:white;">Quadrodeep Automation Labs</strong>. Somaiya Infrastructure Node Core.</div>
+            <button onclick="logout()" class="portal-btn portal-btn-danger" style="padding: 6px 12px;">Sign Out</button>
+        </div>
+    </footer>
+
+    <script>
+        let currentUser = null;
+        let liveAttendanceChart = null;
+        let liveLabUsageChart = null;
+        let profAnalyticsChartObj = null;
+        let studentAttendanceChartObj = null;
+
+        // ==========================================
+        // SESSION PERSISTENCE (Stays logged in on refresh)
+        // ==========================================
+        window.onload = async () => {
+            const savedSession = localStorage.getItem('quadrodeep_session');
+            if (savedSession) {
+                currentUser = JSON.parse(savedSession);
+                showDashboardInterface();
+            }
+            await checkVacationStatus();
+        };
+
+        // ==========================================
+        // SERVER HEALTH CHECKER
+        // ==========================================
+        function checkServerHealth() {
+            fetch('http://localhost:3000/api/health')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('serverStatusText').innerText = "Online";
+                    document.getElementById('serverStatusText').style.color = "#2e7d32";
+                    document.getElementById('serverPulse').style.backgroundColor = "#4caf50";
+                })
+                .catch(err => {
+                    document.getElementById('serverStatusText').innerText = "Disconnected";
+                    document.getElementById('serverStatusText').style.color = "#c5221f";
+                    document.getElementById('serverPulse').style.backgroundColor = "#c5221f";
+                });
+        }
+        checkServerHealth();
+        setInterval(checkServerHealth, 5000);
+
+        function formatAMPM(time24) {
+            if (!time24) return "";
+            let [h, m] = time24.split(':');
+            let hours = parseInt(h);
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            return hours.toString().padStart(2, '0') + ':' + m + ' ' + ampm;
+        }
+
+        function toggleDropdown() { document.getElementById('dropdownMenu').classList.toggle('active'); }
+
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('dropdownMenu');
+            const burger = document.querySelector('.hamburger-menu');
+            if (menu && !menu.contains(e.target) && !burger.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+
+        function toggleVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+
+        function generateRandomPassword(inputId, iconId) {
+            const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const lower = "abcdefghijklmnopqrstuvwxyz";
+            const num = "0123456789";
+            const sym = "!@#$%^&*-_=+";
+            const all = upper + lower + num + sym;
+            
+            let pwd = upper[Math.floor(Math.random() * upper.length)] +
+                      lower[Math.floor(Math.random() * lower.length)] +
+                      num[Math.floor(Math.random() * num.length)] +
+                      sym[Math.floor(Math.random() * sym.length)];
+            
+            for (let i = 0; i < 8; i++) pwd += all[Math.floor(Math.random() * all.length)];
+            pwd = pwd.split('').sort(() => 0.5 - Math.random()).join('');
+            
+            const input = document.getElementById(inputId);
+            input.value = pwd;
+            input.type = 'text'; 
+            document.getElementById(iconId).textContent = 'visibility_off';
+
+            if (inputId === 'changePwdNew') {
+                document.getElementById('changePwdConfirm').value = pwd;
+                document.getElementById('changePwdConfirm').type = 'text';
+                document.getElementById('toggleConfirmPwd').textContent = 'visibility_off';
+            }
+        }
+
+        function validatePasswordStrength(pwd) {
+            if (pwd.length < 8) return "Password must be at least 8 characters long.";
+            if (pwd.includes(' ') || pwd.includes('.')) return "Password cannot contain spaces or dots (.).";
+            if (!/[A-Z]/.test(pwd)) return "Password must contain at least one uppercase letter.";
+            if (!/[a-z]/.test(pwd)) return "Password must contain at least one lowercase letter.";
+            if (!/[0-9]/.test(pwd)) return "Password must contain at least one number.";
+            if (!/[^A-Za-z0-9\s.]/.test(pwd)) return "Password must contain at least one special character.";
+            return null;
+        }
+
+        function toggleUserFields() {
+            const role = document.getElementById('enrollRole').value;
+            const studentFields = document.getElementById('studentFields');
+            if (role === 'student') studentFields.classList.remove('hidden');
+            else studentFields.classList.add('hidden');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.getElementById('dropdownMenu').classList.remove('active');
+            
+            if (modalId === 'timetableModal') populateTimetablesTable('timetableBody', true);
+            else if (modalId === 'profTimetableModal') populateProfessorTimetable();
+            else if (modalId === 'studentTimetableModal') populateStudentTimetable();
+            else if (modalId === 'manualAttendanceModal') renderAdminManualAttendance();
+            else if (modalId === 'profManualAttendanceModal') renderProfManualAttendance();
+            else if (modalId === 'attendanceHistoryModal') hydrateStudentHistoryTable();
+            else if (modalId === 'espModeModal') configureESPModeModal();
+            else if (modalId === 'addLabModal') populateActiveLabsTable(); 
+            else if (modalId === 'labAssignModal') loadDropdownData(); 
+            else if (modalId === 'labProfessorModal') loadLabProfessorModal();
+            else if (modalId === 'vacationModal') loadVacationModal();
+            else if (modalId === 'updateRfidModal') loadUpdateRfidModal();
+            else if (modalId === 'updateFingerprintModal') loadUpdateFingerprintModal();
+        }
+
+        async function configureESPModeModal() {
+            const labSelect = document.getElementById('modeSelectLab');
+            if (currentUser.role === 'professor') {
+                if (!currentUser.assignedLabs || currentUser.assignedLabs.length === 0) {
+                    await loadProfessorAssignedLabs();
+                }
+                // Populate with ONLY assigned labs
+                if (currentUser.assignedLabs && currentUser.assignedLabs.length > 0) {
+                    labSelect.innerHTML = currentUser.assignedLabs.map(l => 
+                        `<option value="${l.id}">${l.labName} (${l.id})</option>`).join('');
+                    labSelect.disabled = false;
+                    labSelect.style.background = '#fff';
+                } else {
+                    labSelect.innerHTML = '<option value="">No labs assigned</option>';
+                    labSelect.disabled = true;
+                    labSelect.style.background = '#f0f0f0';
+                }
+            } else {
+                labSelect.disabled = false;
+                labSelect.style.background = '#fff';
+                loadDropdownData();
+            }
+        }
+
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+
+        // ==========================================
+        // UNIFIED LOGIN SYSTEM
+        // ==========================================
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pwd = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, password: pwd })
+                });
+                
+                const result = await response.json();
+
+                if (result.success) {
+                    currentUser = { 
+                        id: result.user.id,
+                        name: result.user.name || "User Node", 
+                        role: result.user.role, 
+                        email: email,
+                        batch: result.user.batchId || 'Unassigned'
+                    };
+                    
+                    // Save to local storage for persistence across reloads
+                    localStorage.setItem('quadrodeep_session', JSON.stringify(currentUser));
+                    
+                    errorDiv.style.display = 'none';
+                    showDashboardInterface();
+                } else {
+                    errorDiv.innerText = result.error;
+                    errorDiv.style.display = 'block';
+                }
+            } catch (err) {
+                errorDiv.innerText = "Server connection failed. Is the backend running?";
+                errorDiv.style.display = 'block';
+                console.error("Login connect error:", err);
+            }
+        }
+
+        async function loadDropdownData() {
+            try {
+                const labRes = await fetch('http://localhost:3000/api/labs');
+                const labData = await labRes.json();
+                if (labRes.ok && labData.success) {
+                    const options = '<option value="">Select a Lab...</option>' + 
+                        labData.data.map(l => {
+                            const idKey = 'id';
+                            const nameKey = 'labName';
+                            return `<option value="${l[idKey]}">${l[nameKey]} (${l[idKey]})</option>`;
+                        }).join('');
+                    ['ttLab', 'filterLab', 'enrollLabSelect', 'modeSelectLab', 'adminManualLabFilter', 'assignLabId']
+                        .forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = options; });
+                }
+
+                const batchRes = await fetch('http://localhost:3000/api/batches');
+                const batchData = await batchRes.json();
+                if (batchRes.ok && batchData.success) {
+                    window.globalBatches = batchData.data; 
+                    const options = '<option value="">Select a Batch...</option>' + 
+                        batchData.data.map(b => {
+                            const idKey = 'id';
+                            const nameKey = 'batches';
+                            return `<option value="${b[idKey]}">${b[nameKey]}</option>`;
+                        }).join('');
+                    ['ttBatch', 'filterBatch', 'profFilterBatch', 'profBatchSelect', 'enrollBatch', 'assignBatchId']
+                        .forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = options; });
+                }
+
+                const profRes = await fetch('http://localhost:3000/api/professors');
+                const profData = await profRes.json();
+                if (profRes.ok && profData.success) {
+                    window.globalProfessors = profData.data;
+                    const options = '<option value="">Select a Professor...</option>' + 
+                        profData.data.map(p => `<option value="${p.id}">${p.name} (${p.email})</option>`).join('');
+                    const profEl = document.getElementById('newLabProfessor');
+                    if (profEl) profEl.innerHTML = options;
+                    const assignProfEl = document.getElementById('assignProfId');
+                    if (assignProfEl) assignProfEl.innerHTML = options;
+                }
+
+                const studentRes = await fetch('http://localhost:3000/api/users?role=student');
+                const studentData = await studentRes.json();
+                if (studentRes.ok && studentData.success) {
+                    const options = '<option value="">Select a Student...</option>' + 
+                        studentData.data.map(s => `<option value="${s.id}">${s.name} (${s.email})</option>`).join('');
+                    const filterStudentEl = document.getElementById('filterStudent');
+                    if (filterStudentEl) filterStudentEl.innerHTML = options;
+                }
+            } catch (err) { console.error("Dropdown fetch error:", err); }
+        }
+
+        let professorSessions = [];
+
+        async function loadProfessorAssignedLabs() {
+            try {
+                const res = await fetch(`http://localhost:3000/api/professor/me?professorId=${currentUser.id}`);
+                const data = await res.json();
+                if (data.success && data.data) {
+                    const { assignedLabs } = data.data;
+                    currentUser.assignedLabIds = assignedLabs.map(l => l.id);
+                    currentUser.assignedLabs = assignedLabs;
+
+                    // Update Primary Lab badge
+                    const badge = document.getElementById('profPrimaryLabBadge');
+                    if (assignedLabs.length > 0) {
+                        badge.textContent = `Primary Lab: ${assignedLabs[0].labName} (${assignedLabs[0].id})`;
+                        badge.style.background = '#e8f5e9';
+                        badge.style.color = '#2e7d32';
+                    } else {
+                        badge.textContent = 'Primary Lab: No labs assigned';
+                        badge.style.background = '#fff3e0';
+                        badge.style.color = '#e65100';
+                    }
+
+                    // Populate ESP Mode dropdown
+                    const modeSelect = document.getElementById('modeSelectLab');
+                    if (modeSelect) {
+                        if (assignedLabs.length > 0) {
+                            modeSelect.innerHTML = assignedLabs.map(l => `<option value="${l.id}">${l.labName} (${l.id})</option>`).join('');
+                            modeSelect.disabled = false;
+                        } else {
+                            modeSelect.innerHTML = '<option value="">No labs assigned</option>';
+                            modeSelect.disabled = true;
+                        }
+                    }
+                }
+            } catch (err) { console.error('Failed to load professor labs:', err); }
+        }
+
+        async function loadUpcomingSessions() {
+            const sessionSelect = document.getElementById('profSessionSelect');
+            if (!sessionSelect) return;
+            
+            sessionSelect.innerHTML = '<option value="">Loading sessions...</option>';
+            sessionSelect.disabled = true;
+
+            try {
+                const res = await fetch(`http://localhost:3000/api/professor/upcoming-sessions?professorId=${currentUser.id}`);
+                const data = await res.json();
+                if (data.success) {
+                    professorSessions = data.data || [];
+                    
+                    if (data.vacation) {
+                        sessionSelect.innerHTML = '<option value="">Vacation Mode - No Sessions</option>';
+                        return;
+                    }
+                    
+                    if (professorSessions.length === 0) {
+                        sessionSelect.innerHTML = '<option value="">No upcoming sessions this week</option>';
+                        return;
+                    }
+
+                    let options = '<option value="">Select a Session...</option>';
+                    professorSessions.forEach(session => {
+                        const statusIcon = session.status === 'happening' ? '🔵 LIVE' : 
+                                          session.status === 'upcoming' ? '🟢 UPCOMING' : '⚫ OVER';
+                        const timeInfo = session.status === 'upcoming' && session.timeUntilStart !== null
+                            ? ` (in ${Math.round(session.timeUntilStart)} min)`
+                            : session.status === 'happening' && session.timeUntilEnd !== null
+                            ? ` (${Math.round(session.timeUntilEnd)} min left)`
+                            : '';
+                        const label = `[${statusIcon}] ${session.labName} - ${session.batchName} - ${session.dayOfWeek} ${session.startTime}-${session.endTime}${timeInfo}`;
+                        options += `<option value="${session.timetableId}" data-lab="${session.labName}" data-batch="${session.batchName}" data-day="${session.dayOfWeek}" data-time="${session.startTime}-${session.endTime}" data-mode="${session.mode}" data-status="${session.status}">${label}</option>`;
+                    });
+                    sessionSelect.innerHTML = options;
+                    sessionSelect.disabled = false;
+
+                    // Auto-select first happening/upcoming
+                    const firstActive = professorSessions.find(s => s.status === 'happening' || s.status === 'upcoming');
+                    if (firstActive) sessionSelect.value = firstActive.timetableId;
+                    onSessionSelect();
+                }
+            } catch (err) {
+                sessionSelect.innerHTML = '<option value="">Failed to load sessions</option>';
+                console.error('Upcoming sessions error:', err);
+            }
+        }
+
+        function onSessionSelect() {
+            const select = document.getElementById('profSessionSelect');
+            const details = document.getElementById('sessionDetails');
+            const btn = document.getElementById('initSessionBtn');
+            const option = select.options[select.selectedIndex];
+
+            if (select.value) {
+                details.style.display = 'block';
+                btn.disabled = false;
+                document.getElementById('selLabName').textContent = option.dataset.lab || '-';
+                document.getElementById('selBatchName').textContent = option.dataset.batch || '-';
+                document.getElementById('selDay').textContent = option.dataset.day || '-';
+                document.getElementById('selTime').textContent = option.dataset.time || '-';
+                document.getElementById('selMode').textContent = option.dataset.mode || '-';
+                document.getElementById('selStatus').textContent = option.dataset.status || '-';
+                document.getElementById('selStatus').className = 'status-badge status-' + (option.dataset.status || '').toLowerCase();
+            } else {
+                details.style.display = 'none';
+                btn.disabled = true;
+            }
+        }
+
+        document.addEventListener('change', e => {
+            if (e.target.id === 'profSessionSelect') onSessionSelect();
+        });
+
+        async function initializeSelectedSession() {
+            const select = document.getElementById('profSessionSelect');
+            if (!select) { alert('Session selector not found. Are you logged in as professor?'); return; }
+            const timetableId = select.value;
+            if (!timetableId) { alert('Select a session first'); return; }
+
+            try {
+                const res = await fetch('http://localhost:3000/api/professor/session/initialize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ timetableId, professorId: currentUser.id })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const triggerCard = document.getElementById('sessionTriggerCard');
+                    const panel = document.getElementById('sessionPanel');
+                    if (triggerCard) triggerCard.style.display = 'none';
+                    if (panel) panel.classList.remove('hidden');
+                    if (data.data) showLiveSessionPanel(data.data);
+                } else {
+                    alert('Failed to initialize session:\n' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                alert('Server error: ' + err.message + '\n\nCheck browser console (F12) for details.');
+            }
+        }
+
+        function showLiveSessionPanel(sessionData) {
+            if (!sessionData) { console.error('showLiveSessionPanel: no data'); return; }
+            const { sessionId, labId, batchId, mode, students } = sessionData;
+            if (!students) { console.error('showLiveSessionPanel: no students array'); return; }
+            window._currentSessionLabId = labId;
+            window._sessionStudents = students;
+            const panel = document.getElementById('sessionPanel');
+            if (!panel) { console.error('showLiveSessionPanel: sessionPanel not found'); return; }
+            panel.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                    <div>
+                        <h2 style="margin:0;display:flex;align-items:center;gap:8px;">
+                            <span class="material-icons" style="color:#4caf50;">play_circle_filled</span>
+                            Session LIVE
+                        </h2>
+                        <p style="margin:4px 0 0 0;color:#666;">
+                            Mode: <strong>${mode}</strong> |
+                            Batch: <strong>${batchId}</strong> |
+                            Students: <strong>${students.length}</strong>
+                        </p>
+                    </div>
+                    <button onclick="endSession()" class="portal-btn portal-btn-danger" style="display:flex;align-items:center;gap:4px;padding:10px 20px;">
+                        <span class="material-icons">stop</span> End Session
+                    </button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;">
+                        <thead>
+                            <tr style="background:#f5f5f5;">
+                                <th style="padding:10px;text-align:left;">Student</th>
+                                <th style="padding:10px;text-align:left;">RFID</th>
+                                <th style="padding:10px;text-align:left;">Status</th>
+                                <th style="padding:10px;text-align:left;">Time</th>
+                                <th style="padding:10px;text-align:left;">Override</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceTable">
+                            ${students.map(s => `
+                                <tr data-student-id="${s.id}">
+                                    <td style="padding:8px;border-bottom:1px solid #eee;">${s.name}</td>
+                                    <td style="padding:8px;border-bottom:1px solid #eee;">${s.rfid || '-'}</td>
+                                    <td style="padding:8px;border-bottom:1px solid #eee;">
+                                        <span class="status-badge status-notyet">Not Yet</span>
+                                    </td>
+                                    <td style="padding:8px;border-bottom:1px solid #eee;">-</td>
+                                    <td style="padding:8px;border-bottom:1px solid #eee;">-</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            startLiveAttendancePoll(labId);
+        }
+
+        function endSession() {
+            if (!confirm('End this session?')) return;
+            const labId = window._currentSessionLabId || 'IOT_01';
+            fetch('http://localhost:3000/api/professor/session/end', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ labId, professorId: currentUser.id })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    const panel = document.getElementById('sessionPanel');
+                    const triggerCard = document.getElementById('sessionTriggerCard');
+                    if (panel) {
+                        panel.classList.add('hidden');
+                        panel.innerHTML = '<h3 style="margin-bottom:16px; color:#2e7d32;">Live Session Polling Register</h3><table><thead><tr><th>Student Candidate</th><th>Hardware Map Reference</th><th>Live State</th><th>Manual Override Correction Actions</th></tr></thead><tbody id="attendanceTable"><tr><td colspan="4" style="text-align:center;">No active polling streams detected. Waiting for hardware...</td></tr></tbody></table>';
+                    }
+                    if (triggerCard) triggerCard.style.display = 'block';
+                    clearInterval(window._attendancePoll);
+                    window._currentSessionLabId = null;
+                } else {
+                    alert('End session failed: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(err => alert('End session error: ' + err.message));
+        }
+
+        function startLiveAttendancePoll(labId) {
+            clearInterval(window._attendancePoll);
+            window._attendancePoll = setInterval(async () => {
+                try {
+                    const today = new Date().toISOString().split('T')[0];
+                    const res = await fetch('http://localhost:3000/api/attendance');
+                    const data = await res.json();
+                    if (!data.success) return;
+
+                    const todayRecords = data.data.filter(r => r.date === today);
+                    const tbody = document.getElementById('attendanceTable');
+                    if (!tbody) return;
+
+                    tbody.querySelectorAll('tr[data-student-id]').forEach(tr => {
+                        const statusCell = tr.querySelector('td:nth-child(3) span');
+                        const timeCell = tr.querySelector('td:nth-child(4)');
+                        const overrideCell = tr.querySelector('td:nth-child(5)');
+                        if (statusCell) {
+                            statusCell.className = 'status-badge status-notyet';
+                            statusCell.textContent = 'Not Yet';
+                        }
+                        if (timeCell) timeCell.textContent = '-';
+                        if (overrideCell) overrideCell.innerHTML = '-';
+                    });
+
+                    todayRecords.forEach(r => {
+                        const row = tbody.querySelector(`tr[data-student-id="${r.studentId}"]`);
+                        if (row) {
+                            const statusCell = row.querySelector('td:nth-child(3) span');
+                            const timeCell = row.querySelector('td:nth-child(4)');
+                            const overrideCell = row.querySelector('td:nth-child(5)');
+                            if (statusCell) {
+                                statusCell.className = 'status-badge status-' + (r.status||'').toLowerCase();
+                                statusCell.textContent = r.status || 'Unknown';
+                            }
+                            if (timeCell) {
+                                timeCell.textContent = r.createdAt ? new Date(r.createdAt).toLocaleTimeString() : new Date().toLocaleTimeString();
+                            }
+                            if (overrideCell) {
+                                overrideCell.innerHTML = `<select onchange="overrideAttendance('${r.id}', this.value)" style="padding:4px;">
+                                    <option value="">No Change</option>
+                                    <option value="Present">Present</option>
+                                    <option value="Late">Late</option>
+                                    <option value="Absent">Absent</option>
+                                </select>`;
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.error('Attendance poll error:', e);
+                }
+            }, 3000);
+        }
+
+        function overrideAttendance(id, status) {
+            if (!status || status === '') return;
+            fetch('http://localhost:3000/api/attendance/' + id, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) console.error('Override failed:', data.error);
+            })
+            .catch(err => console.error('Override error:', err));
+        }
+
+        // Routing engine based on role
+        async function showDashboardInterface() {
+            if (!currentUser) return;
+            
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('mainInterface').classList.remove('hidden');
+            document.getElementById('navUserName').textContent = currentUser.name;
+            document.getElementById('roleBadge').textContent = currentUser.role.toUpperCase();
+
+            loadDropdownData();
+
+            // Hide everything first
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('professorDashboard').classList.add('hidden');
+            document.getElementById('studentDashboard').classList.add('hidden');
+            document.getElementById('adminMenuItems').classList.add('hidden');
+            document.getElementById('professorMenuItems').classList.add('hidden');
+            document.getElementById('studentMenuItems').classList.add('hidden');
+
+            // Route dynamically based on database role
+            if (currentUser.role === 'admin') {
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                document.getElementById('adminMenuItems').classList.remove('hidden');
+                updateAnalytics(); 
+            } else if (currentUser.role === 'professor') {
+                document.getElementById('professorDashboard').classList.remove('hidden');
+                document.getElementById('professorMenuItems').classList.remove('hidden');
+                await loadProfessorAssignedLabs();
+                await loadUpcomingSessions();
+                updateProfAnalytics(); 
+            } else if (currentUser.role === 'student') {
+                document.getElementById('studentDashboard').classList.remove('hidden');
+                document.getElementById('studentMenuItems').classList.remove('hidden');
+                initStudentView();
+            } else {
+                alert("Unrecognized user role detected. Please contact administrator.");
+            }
+        }
+
+        async function populateProfessorTimetable() {
+            await populateTimetablesTable('profTimetableBody', false, { labIds: currentUser.assignedLabIds?.join(',') });
+        }
+
+        async function populateStudentTimetable() {
+            if (!currentUser.batch || currentUser.batch === 'Unassigned') {
+                document.getElementById('studentTimetableBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px; color:#777;">You are not assigned to a batch.</td></tr>';
+                return;
+            }
+            await populateTimetablesTable('studentTimetableBody', false, { batchId: currentUser.batch });
+        }
+
+        async function populateTimetablesTable(targetTbodyId, isAdmin = false, filterParams = {}) {
+            const element = document.getElementById(targetTbodyId);
+            if (!element) return;
+            element.innerHTML = `<tr><td colspan="${isAdmin ? 5 : 4}" style="text-align:center; padding:20px; color:#777;">Loading...</td></tr>`;
+
+            try {
+                const params = new URLSearchParams();
+                if (filterParams.batchId) params.set('batchId', filterParams.batchId);
+                if (filterParams.labIds) params.set('labIds', filterParams.labIds);
+                if (filterParams.professorId) params.set('professorId', filterParams.professorId);
+                params.set('includeStatus', 'true');
+
+                const response = await fetch(`http://localhost:3000/api/timetable?${params}`);
+                const result = await response.json();
+
+                if (result.success && result.data && result.data.length > 0) {
+                    element.innerHTML = result.data.map(item => {
+                        const tBatchIdKey = 'batch-id';
+                        const tLabIdKey = 'lab id';
+                        const tDayKey = 'day of week';
+                        const tStartKey = 'start time';
+                        const tEndKey = 'end time';
+                        const tModeKey = 'mode';
+                        const tStatusKey = 'status';
+
+                        let rawBatchId = item[tBatchIdKey] || 'Unknown';
+                        let displayBatchName = rawBatchId;
+                        if (window.globalBatches) {
+                            const matchedBatch = window.globalBatches.find(b => b.id == rawBatchId);
+                            if (matchedBatch) displayBatchName = matchedBatch.batches || rawBatchId;
+                        }
+
+                        const status = item[tStatusKey] || 'upcoming';
+                        const statusClass = status === 'happening' ? 'status-live' : status === 'upcoming' ? 'status-upcoming' : 'status-over';
+                        const statusLabel = status === 'happening' ? '🔵 LIVE' : status === 'upcoming' ? '🟢 UPCOMING' : '⚫ COMPLETED';
+
+                        const rowId = item.id || 'undefined';
+                        const cols = isAdmin ? 5 : 4;
+
+                        return `<tr>
+                            <td><strong>${item[tDayKey] || 'Any Day'}</strong></td>
+                            <td>
+                                <span style="color:#800000; font-weight:600;">${item[tLabIdKey] || 'Unknown Lab'}</span>
+                                ${item[tModeKey] ? `<span class="badge" style="margin-left:8px; background:#e8f0fe; color:#1a73e8;">${item[tModeKey]}</span>` : ''}
+                            </td>
+                            <td><span class="badge">${displayBatchName}</span></td>
+                            <td>
+                                <code>${item[tStartKey] || '--'} - ${item[tEndKey] || '--'}</code>
+                                <span class="status-badge ${statusClass}" style="margin-left:8px; font-size:0.7rem;">${statusLabel}</span>
+                            </td>
+                            ${isAdmin ? `<td><button onclick="deleteTimetableEntry('${rowId}')" class="portal-btn portal-btn-danger" style="padding:4px 8px; font-size:0.75rem;">Delete</button></td>` : ''}
+                        </tr>`;
+                    }).join('');
+                } else {
+                    element.innerHTML = `<tr><td colspan="${isAdmin ? 5 : 4}" style="text-align:center; padding:20px; color:#777;">No timetable entries.</td></tr>`;
+                }
+            } catch (err) {
+                element.innerHTML = `<tr><td colspan="${isAdmin ? 5 : 4}" style="color:red; text-align:center;">Server disconnected.</td></tr>`;
+            }
+        }
+
+        async function deleteTimetableEntry(id) {
+            if (!id || id === 'undefined') { alert("Cannot delete: Missing Row ID."); return; }
+            if(confirm("Are you sure you want to delete this scheduled slot from the database?")) {
+                try {
+                    const response = await fetch('http://localhost:3000/api/timetable/' + id, { method: 'DELETE' });
+                    const result = await response.json();
+                    if (result.success) populateTimetablesTable('timetableBody', true);
+                    else alert("Database Deletion Failed: " + result.error);
+                } catch (err) { alert("Could not reach backend server!"); }
+            }
+        }
+
+        async function addNewTimetableEntry() {
+            const batch = document.getElementById('ttBatch').value; 
+            const day = document.getElementById('ttDay').value;
+            const lab = document.getElementById('ttLab').value;
+            const startStr = document.getElementById('ttStartTime').value;
+            const endStr = document.getElementById('ttEndTime').value;
+
+            if(!startStr || !endStr || !batch || !lab) { alert("Please provide valid Batch, Lab, Start Time, and End Time inputs."); return; }
+
+            const startTime = formatAMPM(startStr);
+            const endTime = formatAMPM(endStr);
+            const timetablePayload = { batchId: batch, dayOfWeek: day, labId: lab, startTime: startTime, endTime: endTime };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/timetable', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(timetablePayload)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    populateTimetablesTable('timetableBody', true);
+                    alert("Schedule slot registered successfully!");
+                    document.getElementById('ttStartTime').value = '';
+                    document.getElementById('ttEndTime').value = '';
+                } else alert("Database Configuration Failed: " + result.error);
+            } catch (err) { alert("Could not reach backend server!"); }
+        }
+
+        async function submitLabAssignment() {
+            const payload = {
+                labId: document.getElementById('assignLabId').value,
+                labName: document.getElementById('assignLabName').value,
+                professorId: document.getElementById('assignProfId').value,
+                batchId: document.getElementById('assignBatchId').value,
+                dayOfWeek: document.getElementById('assignDay').value,
+                startTime: document.getElementById('assignStartTime').value,
+                endTime: document.getElementById('assignEndTime').value
+            };
+
+            if (!payload.labId || !payload.professorId) {
+                alert("Lab ID and Professor ID are strictly required.");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/admin/assign-lab', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Lab assignment and timetable updated successfully!');
+                    closeModal('labAssignModal');
+                } else alert('Failed to assign lab: ' + result.error);
+            } catch (error) {
+                console.error("Assignment Error:", error);
+                alert('Server connection failed while assigning lab.');
+            }
+        }
+
+        async function populateActiveLabsTable() {
+            const tbody = document.getElementById('activeLabsBody');
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#777; padding:20px;">Fetching from Database...</td></tr>`;
+            try {
+                const res = await fetch('http://localhost:3000/api/labs');
+                const data = await res.json();
+                if (data.success && data.data.length > 0) {
+                    tbody.innerHTML = data.data.map(l => {
+                        const profName = l.assignedProfessor ? l.assignedProfessor.professorName : 'Unassigned';
+
+                        return `<tr>
+                            <td><strong>${l.id}</strong></td>
+                            <td>${l.labName || 'Lab'}</td>
+                            <td>${l.roomNumber || 'Unassigned'}</td>
+                            <td>${profName}</td>
+                        </tr>`;
+                    }).join('');
+                } else tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#777; padding:20px;">No labs registered yet.</td></tr>`;
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center; padding:20px;">Failed to connect to backend server.</td></tr>`; }
+        }
+
+        async function registerNewLab() {
+            const id = document.getElementById('newLabId').value;
+            const name = document.getElementById('newLabName').value;
+            const loc = document.getElementById('newRoomLocation').value;
+            
+            if(!id || !name) { alert("Please complete both Laboratory Node ID and Room Name."); return; }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/labs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ labId: id, labName: name, roomNumber: loc || "Unassigned" })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert(`Terminal Hardware Registered & Synced with Supabase.\nID: ${id}\nName: ${name}`);
+                    document.getElementById('newLabId').value = '';
+                    document.getElementById('newLabName').value = '';
+                    document.getElementById('newRoomLocation').value = '';
+                    populateActiveLabsTable();
+                } else alert("Database registration error: " + result.error);
+            } catch (err) { alert("Connection failed! Make sure your secure backend server is actively listening on port 3000."); }
+        }
+
+        // ==========================================
+        // ENROLLMENT & PASSWORD LOGIC
+        // ==========================================
+        async function completeEnrollment() { 
+            const role = document.getElementById('enrollRole').value;
+            const name = document.getElementById('enrollName').value;
+            const email = document.getElementById('enrollEmail').value;
+            const password = document.getElementById('enrollPassword').value;
+            const batchId = document.getElementById('enrollBatch').value;
+
+            if (!role || !name || !email || !password) {
+                alert("Role, Name, Email, and Password fields are required!");
+                return;
+            }
+
+            const pwdError = validatePasswordStrength(password);
+            if (pwdError) { alert("WEAK PASSWORD: " + pwdError); return; }
+
+            if (role === 'student' && !batchId) {
+                alert("Students must be assigned to an initial Batch.");
+                return;
+            }
+
+            const payload = { role, name, email, password, batchId: role === 'student' ? batchId : null };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(`${role.toUpperCase()} profile securely mapped to database!`);
+                    closeModal('addUserModal');
+                    document.getElementById('enrollRole').value = '';
+                    document.getElementById('enrollName').value = '';
+                    document.getElementById('enrollEmail').value = '';
+                    document.getElementById('enrollPassword').value = '';
+                    document.getElementById('enrollBatch').value = '';
+                    
+                    document.getElementById('enrollPassword').type = 'password';
+                    document.getElementById('toggleEnrollPwd').textContent = 'visibility';
+                    toggleUserFields();
+                } else alert("Server Error: " + result.error);
+            } catch (err) { alert("Failed to connect to backend API pipeline."); }
+        }
+
+        async function submitPasswordChange() {
+            const current = document.getElementById('changePwdCurrent').value;
+            const newPwd = document.getElementById('changePwdNew').value;
+            const confirmPwd = document.getElementById('changePwdConfirm').value;
+
+            if (!current || !newPwd || !confirmPwd) { alert("Please fill all fields."); return; }
+
+            const pwdError = validatePasswordStrength(newPwd);
+            if (pwdError) { alert("WEAK PASSWORD: " + pwdError); return; }
+
+            if (newPwd !== confirmPwd) { alert("New passwords do not match."); return; }
+            
+            try {
+                const res = await fetch('http://localhost:3000/api/users/password', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: currentUser.email, currentPassword: current, newPassword: newPwd })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("Password updated securely!");
+                    closeModal('changePasswordModal');
+                    document.getElementById('changePwdCurrent').value = '';
+                    document.getElementById('changePwdNew').value = '';
+                    document.getElementById('changePwdConfirm').value = '';
+
+                    document.getElementById('changePwdCurrent').type = 'password';
+                    document.getElementById('changePwdNew').type = 'password';
+                    document.getElementById('changePwdConfirm').type = 'password';
+                    document.getElementById('toggleCurrentPwd').textContent = 'visibility';
+                    document.getElementById('toggleNewPwd').textContent = 'visibility';
+                    document.getElementById('toggleConfirmPwd').textContent = 'visibility';
+                } else alert("Error: " + data.error);
+            } catch (err) { alert("Backend connection failed."); }
+        }
+
+        async function startEnrollment(type, userId, labId, statusId, btnId, onComplete) {
+            if (!labId) { alert('Select a lab first'); return; }
+            
+            document.getElementById(btnId).disabled = true;
+            document.getElementById(statusId).style.display = 'block';
+            
+            try {
+                const res = await fetch('http://localhost:3000/api/admin/enrollment/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ labId, type, userId: userId || null })
+                });
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error);
+                
+                pollEnrollmentResult(labId, type, statusId, btnId, onComplete);
+            } catch (err) {
+                alert('Failed: ' + err.message);
+                document.getElementById(btnId).disabled = false;
+                document.getElementById(statusId).style.display = 'none';
+            }
+        }
+
+        async function pollEnrollmentResult(labId, type, statusId, btnId, onComplete) {
+            const interval = setInterval(async () => {
+                try {
+                    const res = await fetch(`http://localhost:3000/api/admin/enrollment/status?labId=${labId}&type=${type}`);
+                    const data = await res.json();
+                    if (data.success && data.data.status === 'completed') {
+                        clearInterval(interval);
+                        document.getElementById(statusId).innerHTML = '✅ Captured successfully!';
+                        document.getElementById(statusId).style.background = '#e8f5e9';
+                        document.getElementById(btnId).disabled = false;
+                        if (onComplete) onComplete(data.data.result_value);
+                    } else if (data.data.status === 'timeout' || data.data.status === 'failed') {
+                        clearInterval(interval);
+                        document.getElementById(statusId).innerHTML = '❌ ' + (data.data.status === 'timeout' ? 'Timeout' : 'Failed');
+                        document.getElementById(statusId).style.background = '#fce8e6';
+                        document.getElementById(btnId).disabled = false;
+                    }
+                } catch (err) {
+                    console.error('Poll error:', err);
+                }
+            }, 2000);
+            
+            setTimeout(() => clearInterval(interval), 60000);
+        }
+
+        // ==========================================
+        // UPDATE RFID MODAL
+        // ==========================================
+        let rfidAllStudents = [];
+        let rfidSelectedUserId = null;
+
+        async function loadUpdateRfidModal() {
+            const labSelect = document.getElementById('rfidUpdateLabSelect');
+            const listDiv = document.getElementById('rfidStudentList');
+            document.getElementById('rfidCaptureArea').style.display = 'none';
+            document.getElementById('rfidResultArea').style.display = 'none';
+            rfidSelectedUserId = null;
+
+            // Load labs
+            try {
+                const res = await fetch('http://localhost:3000/api/labs');
+                const data = await res.json();
+                if (data.success) {
+                    labSelect.innerHTML = '<option value="">Select a Lab...</option>' +
+                        data.data.map(l => `<option value="${l.id}">${l.labName} (${l.id})</option>`).join('');
+                }
+            } catch (err) { console.error('Failed to load labs:', err); }
+
+            // Load students
+            listDiv.innerHTML = '<div style="padding:16px;text-align:center;color:#777;">Loading students...</div>';
+            try {
+                const res = await fetch('http://localhost:3000/api/users?role=student');
+                const data = await res.json();
+                if (data.success) {
+                    rfidAllStudents = (data.data || []).sort((a, b) => {
+                        if (!a.rfid && b.rfid) return -1;
+                        if (a.rfid && !b.rfid) return 1;
+                        return a.name.localeCompare(b.name);
+                    });
+                    renderRfidStudentList('');
+                } else {
+                    listDiv.innerHTML = '<div style="padding:16px;text-align:center;color:#777;">Failed to load students.</div>';
+                }
+            } catch (err) {
+                listDiv.innerHTML = '<div style="padding:16px;text-align:center;color:red;">Server connection failed.</div>';
+            }
+        }
+
+        function renderRfidStudentList(filter) {
+            const listDiv = document.getElementById('rfidStudentList');
+            const filtered = rfidAllStudents.filter(s =>
+                s.name.toLowerCase().includes(filter.toLowerCase()) ||
+                s.email.toLowerCase().includes(filter.toLowerCase())
+            );
+            if (filtered.length === 0) {
+                listDiv.innerHTML = '<div style="padding:16px;text-align:center;color:#777;">No students found.</div>';
+                return;
+            }
+            listDiv.innerHTML = filtered.map(s => {
+                const hasRfid = s.rfid && s.rfid.length > 0;
+                const selected = s.id === rfidSelectedUserId ? ' style="background:#e8f0fe;border-color:#1a73e8;"' : '';
+                return `<div class="rfid-student-item" data-id="${s.id}" onclick="selectRfidStudent('${s.id}')"${selected} style="padding:12px 16px;border-bottom:1px solid #eee;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='${s.id === rfidSelectedUserId ? '#e8f0fe' : 'transparent'}'">
+                    <div>
+                        <strong>${s.name}</strong>
+                        <div style="font-size:0.85rem;color:#666;">${s.email}</div>
+                    </div>
+                    <span class="badge" style="${hasRfid ? 'background:#e6f4ea;color:#137333;' : 'background:#fce8e6;color:#c5221f;'}">${hasRfid ? '✅ Has RFID' : '❌ No RFID'}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function filterUpdateRfidList() {
+            const filter = document.getElementById('rfidSearchInput').value;
+            renderRfidStudentList(filter);
+        }
+
+        function selectRfidStudent(userId) {
+            rfidSelectedUserId = userId;
+            renderRfidStudentList(document.getElementById('rfidSearchInput').value);
+            const student = rfidAllStudents.find(s => s.id === userId);
+            if (student) {
+                document.getElementById('rfidSelectedName').textContent = student.name;
+                document.getElementById('rfidSelectedBadge').textContent = student.rfid ? 'Has RFID' : 'No RFID';
+                document.getElementById('rfidSelectedBadge').style.background = student.rfid ? '#e6f4ea' : '#fce8e6';
+                document.getElementById('rfidSelectedBadge').style.color = student.rfid ? '#137333' : '#c5221f';
+                document.getElementById('rfidCaptureArea').style.display = 'block';
+                document.getElementById('rfidResultArea').style.display = 'none';
+                document.getElementById('rfidEnrollmentStatus').style.display = 'none';
+            }
+        }
+
+        async function startUpdateRfid() {
+            const labId = document.getElementById('rfidUpdateLabSelect').value;
+            if (!labId) { alert('Select a lab first'); return; }
+            if (!rfidSelectedUserId) { alert('Select a student first'); return; }
+
+            const resultArea = document.getElementById('rfidResultArea');
+            resultArea.style.display = 'none';
+
+            startEnrollment('rfid', rfidSelectedUserId, labId, 'rfidEnrollmentStatus', 'btnCaptureRFID', async (resultValue) => {
+                try {
+                    const res = await fetch(`http://localhost:3000/api/users/${rfidSelectedUserId}/rfid`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ rfid: resultValue })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        resultArea.innerHTML = '✅ RFID updated successfully for ' + data.data.name;
+                        resultArea.style.background = '#e6f4ea';
+                        // Reload student list to update badge
+                        const idx = rfidAllStudents.findIndex(s => s.id === rfidSelectedUserId);
+                        if (idx !== -1) rfidAllStudents[idx].rfid = resultValue;
+                        renderRfidStudentList(document.getElementById('rfidSearchInput').value);
+                    } else {
+                        resultArea.innerHTML = '❌ Failed: ' + (data.error || 'Server error');
+                        resultArea.style.background = '#fce8e6';
+                    }
+                    resultArea.style.display = 'block';
+                } catch (err) {
+                    resultArea.innerHTML = '❌ Server error: ' + err.message;
+                    resultArea.style.background = '#fce8e6';
+                    resultArea.style.display = 'block';
+                }
+            });
+        }
+
+        // ==========================================
+        // UPDATE FINGERPRINT MODAL
+        // ==========================================
+        let fpAllStudents = [];
+        let fpSelectedUserId = null;
+
+        async function loadUpdateFingerprintModal() {
+            const labSelect = document.getElementById('fpUpdateLabSelect');
+            const listDiv = document.getElementById('fpStudentList');
+            document.getElementById('fpCaptureArea').style.display = 'none';
+            document.getElementById('fpResultArea').style.display = 'none';
+            fpSelectedUserId = null;
+
+            // Load labs
+            try {
+                const res = await fetch('http://localhost:3000/api/labs');
+                const data = await res.json();
+                if (data.success) {
+                    labSelect.innerHTML = '<option value="">Select a Lab...</option>' +
+                        data.data.map(l => `<option value="${l.id}">${l.labName} (${l.id})</option>`).join('');
+                }
+            } catch (err) { console.error('Failed to load labs:', err); }
+
+            // Load students
+            listDiv.innerHTML = '<div style="padding:16px;text-align:center;color:#777;">Loading students...</div>';
+            try {
+                const res = await fetch('http://localhost:3000/api/users?role=student');
+                const data = await res.json();
+                if (data.success) {
+                    fpAllStudents = (data.data || []).sort((a, b) => {
+                        if (!a.biometric && b.biometric) return -1;
+                        if (a.biometric && !b.biometric) return 1;
+                        return a.name.localeCompare(b.name);
+                    });
+                    renderFpStudentList('');
+                } else {
+                    listDiv.innerHTML = '<div style="padding:16px;text-align:center;color:#777;">Failed to load students.</div>';
+                }
+            } catch (err) {
+                listDiv.innerHTML = '<div style="padding:16px;text-align:center;color:red;">Server connection failed.</div>';
+            }
+        }
+
+        function renderFpStudentList(filter) {
+            const listDiv = document.getElementById('fpStudentList');
+            const filtered = fpAllStudents.filter(s =>
+                s.name.toLowerCase().includes(filter.toLowerCase()) ||
+                s.email.toLowerCase().includes(filter.toLowerCase())
+            );
+            if (filtered.length === 0) {
+                listDiv.innerHTML = '<div style="padding:16px;text-align:center;color:#777;">No students found.</div>';
+                return;
+            }
+            listDiv.innerHTML = filtered.map(s => {
+                const hasFp = s.biometric && s.biometric.length > 0;
+                const selected = s.id === fpSelectedUserId ? ' style="background:#fff3e0;border-color:#e65100;"' : '';
+                return `<div class="fp-student-item" data-id="${s.id}" onclick="selectFpStudent('${s.id}')"${selected} style="padding:12px 16px;border-bottom:1px solid #eee;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='${s.id === fpSelectedUserId ? '#fff3e0' : 'transparent'}'">
+                    <div>
+                        <strong>${s.name}</strong>
+                        <div style="font-size:0.85rem;color:#666;">${s.email}</div>
+                    </div>
+                    <span class="badge" style="${hasFp ? 'background:#e6f4ea;color:#137333;' : 'background:#fce8e6;color:#c5221f;'}">${hasFp ? '✅ Has Fingerprint' : '❌ No Fingerprint'}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function filterUpdateFpList() {
+            const filter = document.getElementById('fpSearchInput').value;
+            renderFpStudentList(filter);
+        }
+
+        function selectFpStudent(userId) {
+            fpSelectedUserId = userId;
+            renderFpStudentList(document.getElementById('fpSearchInput').value);
+            const student = fpAllStudents.find(s => s.id === userId);
+            if (student) {
+                document.getElementById('fpSelectedName').textContent = student.name;
+                document.getElementById('fpSelectedBadge').textContent = student.biometric ? 'Has Fingerprint' : 'No Fingerprint';
+                document.getElementById('fpSelectedBadge').style.background = student.biometric ? '#e6f4ea' : '#fce8e6';
+                document.getElementById('fpSelectedBadge').style.color = student.biometric ? '#137333' : '#c5221f';
+                document.getElementById('fpCaptureArea').style.display = 'block';
+                document.getElementById('fpResultArea').style.display = 'none';
+                document.getElementById('fpEnrollmentStatus').style.display = 'none';
+            }
+        }
+
+        async function startUpdateFingerprint() {
+            const labId = document.getElementById('fpUpdateLabSelect').value;
+            if (!labId) { alert('Select a lab first'); return; }
+            if (!fpSelectedUserId) { alert('Select a student first'); return; }
+
+            const resultArea = document.getElementById('fpResultArea');
+            resultArea.style.display = 'none';
+
+            startEnrollment('fingerprint', fpSelectedUserId, labId, 'fpEnrollmentStatus', 'btnCaptureFP', async (resultValue) => {
+                let templateBase64 = resultValue;
+                // Parse JSON wrapper if present (format: {"fingerId":1,"templateBase64":"..."})
+                try {
+                    const parsed = JSON.parse(resultValue);
+                    if (parsed.templateBase64) templateBase64 = parsed.templateBase64;
+                } catch (e) { /* it's a raw string, use as-is */ }
+
+                try {
+                    const res = await fetch(`http://localhost:3000/api/users/${fpSelectedUserId}/biometric`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ biometric: templateBase64 })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        resultArea.innerHTML = '✅ Fingerprint updated successfully for ' + data.data.name;
+                        resultArea.style.background = '#e6f4ea';
+                        // Reload student list to update badge
+                        const idx = fpAllStudents.findIndex(s => s.id === fpSelectedUserId);
+                        if (idx !== -1) fpAllStudents[idx].biometric = templateBase64;
+                        renderFpStudentList(document.getElementById('fpSearchInput').value);
+                    } else {
+                        resultArea.innerHTML = '❌ Failed: ' + (data.error || 'Server error');
+                        resultArea.style.background = '#fce8e6';
+                    }
+                    resultArea.style.display = 'block';
+                } catch (err) {
+                    resultArea.innerHTML = '❌ Server error: ' + err.message;
+                    resultArea.style.background = '#fce8e6';
+                    resultArea.style.display = 'block';
+                }
+            });
+        }
+
+        async function renderAdminManualAttendance() {
+            const tbody = document.getElementById('manualAttendanceBody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:#777;">Loading attendance...</td></tr>';
+            try {
+                const res = await fetch('http://localhost:3000/api/attendance');
+                const data = await res.json();
+                if (data.success && data.data.length > 0) {
+                    tbody.innerHTML = data.data.map(row => `
+                        <tr>
+                            <td>${row.studentName || 'Unknown'}</td>
+                            <td>${row.studentId || row.email || 'N/A'}</td>
+                            <td>${row.labName || 'Unknown'}</td>
+                            <td><span class="status-badge status-${(row.status || '').toLowerCase()}">${row.status || 'Unknown'}</span></td>
+                            <td>
+                                <select onchange="updateAttendanceStatus('${row.id}', this.value)" style="padding:4px 8px; font-size:0.8rem; border-radius:4px; border:1px solid #ccc;">
+                                    <option value="present" ${(row.status || '').toLowerCase() === 'present' ? 'selected' : ''}>Present</option>
+                                    <option value="absent" ${(row.status || '').toLowerCase() === 'absent' ? 'selected' : ''}>Absent</option>
+                                    <option value="late" ${(row.status || '').toLowerCase() === 'late' ? 'selected' : ''}>Late</option>
+                                </select>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:#777;">No attendance records yet.</td></tr>';
+                }
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="5" style="color:red; text-align:center; padding:20px;">Failed to load attendance.</td></tr>';
+            }
+        }
+
+        async function updateAttendanceStatus(id, status) {
+            try {
+                const res = await fetch(`http://localhost:3000/api/attendance/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    renderAdminManualAttendance();
+                } else {
+                    alert('Failed to update: ' + data.error);
+                }
+            } catch (err) { 
+                alert('Server error: ' + err.message); 
+            }
+        }
+
+        async function renderProfManualAttendance() {
+            const tbody = document.getElementById('profManualAttendanceBody');
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:#777;">Loading attendance...</td></tr>';
+            try {
+                const res = await fetch('http://localhost:3000/api/attendance');
+                const data = await res.json();
+                if (data.success && data.data.length > 0) {
+                    tbody.innerHTML = data.data.map(row => `
+                        <tr>
+                            <td>${row.studentName || 'Unknown'}</td>
+                            <td>${row.labName || 'Unknown'}</td>
+                            <td><span class="status-badge status-${(row.status || '').toLowerCase()}">${row.status || 'Unknown'}</span></td>
+                            <td>
+                                <select onchange="updateAttendanceStatus('${row.id}', this.value)" style="padding:4px 8px; font-size:0.8rem; border-radius:4px; border:1px solid #ccc;">
+                                    <option value="present" ${(row.status || '').toLowerCase() === 'present' ? 'selected' : ''}>Present</option>
+                                    <option value="absent" ${(row.status || '').toLowerCase() === 'absent' ? 'selected' : ''}>Absent</option>
+                                    <option value="late" ${(row.status || '').toLowerCase() === 'late' ? 'selected' : ''}>Late</option>
+                                </select>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:#777;">No attendance records yet.</td></tr>';
+                }
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="4" style="color:red; text-align:center; padding:20px;">Failed to load attendance.</td></tr>';
+            }
+        }
+
+        function startLabSession() { document.getElementById('sessionPanel').classList.remove('hidden'); document.getElementById('attendanceTable').innerHTML = `<tr><td colspan="4" style="text-align:center; color:#777;">Listening for ESP32 hardware ticks... (Database Empty)</td></tr>`; }
+        function initStudentView() { loadStudentAnalytics(); }
+        async function loadStudentAnalytics() {
+            if (!currentUser) return;
+            try {
+                const res = await fetch(`http://localhost:3000/api/analytics/student/${currentUser.id}`);
+                const json = await res.json();
+                if (!json.success) return;
+
+                const d = json.data;
+                // Attendance percent
+                const pct = d.stats.percent;
+                document.getElementById('attendancePercent').textContent = pct + '%';
+                document.getElementById('attendancePercent').style.color = pct >= 75 ? '#2e7d32' : pct >= 50 ? '#e65100' : '#c5221f';
+
+                // Eligibility
+                const canMiss = d.eligibility.canMissMore;
+                const eligEl = document.getElementById('eligibilityStatus');
+                if (pct >= 75) {
+                    eligEl.innerHTML = `You can miss <strong style="color:#e65100;">${canMiss}</strong> more class${canMiss !== 1 ? 'es' : ''} before falling below 75%`;
+                    eligEl.style.color = canMiss <= 2 ? '#e65100' : '#2e7d32';
+                } else {
+                    eligEl.innerHTML = `<strong style="color:#c5221f;">BELOW THRESHOLD</strong> — Action required to reach 75%`;
+                    eligEl.style.color = '#c5221f';
+                }
+
+                // Punctuality
+                document.getElementById('punctualityScore').textContent = d.punctuality.score + '%';
+
+                // Stats
+                document.getElementById('statPresent').textContent = d.stats.present;
+                document.getElementById('statAbsent').textContent = d.stats.absent;
+                document.getElementById('statTotal').textContent = d.stats.total;
+
+                // Mode pie chart
+                const ctx = document.getElementById('studentAttendanceChart').getContext('2d');
+                if (studentAttendanceChartObj) studentAttendanceChartObj.destroy();
+                const hasAny = d.modePreference.rfid > 0 || d.modePreference.fingerprint > 0;
+                studentAttendanceChartObj = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: hasAny ? ['RFID', 'Fingerprint'] : ['No Data'],
+                        datasets: [{ data: hasAny ? [d.modePreference.rfid, d.modePreference.fingerprint] : [1], backgroundColor: hasAny ? ['#0056b3', '#800000'] : ['#ccc'] }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Verification Mode Preference' } } }
+                });
+
+                // History table
+                const rows = (d.history || []).map(h => `
+                    <tr>
+                        <td>${new Date(h.date).toLocaleDateString() || 'N/A'}</td>
+                        <td>Session #${h['timetable-id'] || 'N/A'}</td>
+                        <td><span class="status-badge status-${(h.status || '').toLowerCase()}">${h.status || 'Unknown'}</span></td>
+                        <td>${h['marked by'] || 'Unknown'}</td>
+                    </tr>
+                `).join('');
+                document.getElementById('historyTable').innerHTML = rows || '<tr><td colspan="4" style="text-align:center;">No history found</td></tr>';
+
+                // Terminal
+                document.querySelector('#studCalcTerminal .calc-value').textContent = pct.toFixed(2) + ' %';
+                const boardStatus = document.querySelector('#studCalcTerminal .calc-value[style*="color"]');
+                if (boardStatus) boardStatus.textContent = pct >= 75 ? 'ELIGIBLE' : 'AT RISK';
+                document.querySelectorAll('#studCalcTerminal .calc-value')[1] && (document.querySelectorAll('#studCalcTerminal .calc-value')[1].textContent = String(d.stats.present).padStart(5, '0') + ' SESSIONS');
+                const warnEls = document.querySelectorAll('#studCalcTerminal .calc-warn');
+                if (warnEls.length) warnEls[0].textContent = String(d.stats.absent).padStart(5, '0') + ' SESSIONS';
+                const targetEl = document.querySelector('#studCalcTerminal .calc-value:last-child');
+                if (targetEl) targetEl.textContent = String(canMiss).padStart(5, '0') + ' CLASSES';
+
+            } catch (err) { console.error('Student analytics error:', err); }
+        }
+
+        async function updateAnalytics() {
+            try {
+                const res = await fetch('http://localhost:3000/api/analytics/admin/overview');
+                const json = await res.json();
+                if (!json.success) { throw new Error(json.error); }
+                const d = json.data;
+
+                // Users
+                document.getElementById('totalUsers').textContent = d.users.total;
+                document.getElementById('calcAdminUsers').textContent = `${d.users.total.toString().padStart(5, '0')} PROFILES`;
+
+                // Labs & devices
+                document.getElementById('calcAdminNodes').textContent = `${d.devices.online} / ${d.devices.total}`;
+                document.getElementById('totalLabs').textContent = d.labs.total;
+
+                // Attendance
+                const rateStr = d.attendance.rate.toFixed(1);
+                document.getElementById('todayAttendance').textContent = rateStr + '%';
+                document.getElementById('calcAdminYield').textContent = rateStr + ' %';
+                document.getElementById('calcAdminLab').textContent = d.mostUtilizedLab;
+                document.getElementById('calcAdminBatch').textContent = 'Active';
+                document.getElementById('calcAdminAlerts').textContent = `${d.hardwareAlerts} ALERTS`;
+
+                // Build lab usage data for charts
+                const labLabels = [d.mostUtilizedLab || 'IOT_01'];
+                const labData = [d.attendance.rate];
+
+                // Device status breakdown
+                const devLabels = ['Online', 'Offline', 'Sleep'];
+                const devData = [d.devices.online, d.devices.offline, d.devices.sleep];
+
+                initAdminCharts(d.users.total, d.labs.total, d.attendance.rate, labLabels, labData, devLabels, devData);
+            } catch (err) { 
+                console.error('Analytics error:', err);
+                document.getElementById('calcAdminYield').textContent = 'ERROR';
+            }
+        }
+
+        function initAdminCharts(totalUsers, totalLabs, avgRate, labLabels, labData, devLabels, devData) {
+            const ctx1 = document.getElementById('attendanceChart').getContext('2d');
+            const ctx2 = document.getElementById('labUsageChart').getContext('2d');
+            if (liveAttendanceChart) liveAttendanceChart.destroy();
+            if (liveLabUsageChart) liveLabUsageChart.destroy();
+            
+            liveAttendanceChart = new Chart(ctx1, {
+                type: 'bar',
+                data: { labels: ['Overall Attendance'], datasets: [{ label: 'Rate %', data: [avgRate || 0], backgroundColor: '#800000' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Global Attendance Rate' } } }
+            });
+            
+            liveLabUsageChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: { labels: devLabels || ['No Data'], datasets: [{ data: devData || [1], backgroundColor: ['#2e7d32', '#c5221f', '#ffa000'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Device Status Distribution' } } }
+            });
+        }
+
+        async function updateProfAnalytics() { 
+            if (!currentUser) return;
+            try {
+                const res = await fetch(`http://localhost:3000/api/analytics/professor/dashboard?professorId=${currentUser.id}`);
+                const json = await res.json();
+                if (!json.success) throw new Error(json.error);
+                const d = json.data;
+
+                const totalAttendance = d.sessions.reduce((s, x) => s + x.total, 0);
+                const totalPresent = d.sessions.reduce((s, x) => s + x.present, 0);
+                const totalLate = d.sessions.reduce((s, x) => s + x.late, 0);
+                const turnoutRate = totalAttendance > 0 ? ((totalPresent + totalLate) / totalAttendance * 100).toFixed(1) : '0.0';
+
+                document.getElementById('calcProfTurnout').textContent = `${totalPresent + totalLate} / ${totalAttendance} (${turnoutRate}%)`;
+                document.getElementById('calcProfLate').textContent = String(totalLate).padStart(5, '0') + ' STUDENTS';
+                document.getElementById('calcProfRisk').textContent = String(d.atRisk.length).padStart(5, '0') + ' STUDENTS';
+
+                const modeTotal = d.modePreference.rfid + d.modePreference.fingerprint;
+                document.getElementById('calcProfBio').textContent = (modeTotal > 0 ? ((d.modePreference.fingerprint / modeTotal) * 100).toFixed(1) : '0.0') + ' %';
+                document.getElementById('calcProfRfid').textContent = (modeTotal > 0 ? ((d.modePreference.rfid / modeTotal) * 100).toFixed(1) : '0.0') + ' %';
+
+                // Trends chart
+                const ctx = document.getElementById('profAnalyticsChart').getContext('2d');
+                if (profAnalyticsChartObj) profAnalyticsChartObj.destroy();
+                const labels = d.trends.map(t => { const p = t.date.split('-'); return p[2] + '/' + p[1]; });
+                const data = d.trends.map(t => t.rate);
+                profAnalyticsChartObj = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: labels.length ? labels : ['No Data'], datasets: [{ label: 'Attendance Rate %', data: data.length ? data : [0], borderColor: '#0056b3', backgroundColor: 'rgba(0, 86, 179, 0.05)', fill: true, tension: 0.2 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Daily Attendance Trend (Last 30 Days)' } }, scales: { y: { min: 0, max: 100 } } }
+                });
+
+                // Mode pie
+                const ctx2 = document.getElementById('profModeChart').getContext('2d');
+                if (window.profModeChartObj) window.profModeChartObj.destroy();
+                const hasModeData = d.modePreference.rfid > 0 || d.modePreference.fingerprint > 0;
+                window.profModeChartObj = new Chart(ctx2, {
+                    type: 'pie',
+                    data: { labels: hasModeData ? ['RFID', 'Fingerprint'] : ['No Data'], datasets: [{ data: hasModeData ? [d.modePreference.rfid, d.modePreference.fingerprint] : [1], backgroundColor: hasModeData ? ['#0056b3', '#800000'] : ['#ccc'] }] },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+
+                // At-risk list
+                const riskEl = document.getElementById('atRiskList');
+                if (d.atRisk.length > 0) {
+                    riskEl.innerHTML = d.atRisk.map(r => `
+                        <div style="padding:8px; margin-bottom:6px; background:#fce8e6; border-radius:4px; border-left:4px solid #c5221f; display:flex; justify-content:space-between;">
+                            <span><strong>${r.name}</strong> (${r.studentId.slice(0,8)}...)</span>
+                            <span style="color:#c5221f; font-weight:bold;">${r.prevRate}% → ${r.recentRate}% (drop: ${r.drop}%)</span>
+                        </div>
+                    `).join('');
+                } else {
+                    riskEl.innerHTML = '<p style="color:#2e7d32; font-size:0.9rem;">No at-risk students detected.</p>';
+                }
+            } catch (err) { 
+                console.error('Prof analytics error:', err);
+                document.getElementById('calcProfTurnout').textContent = '0 / 0 (0.0%)';
+            }
+        }
+
+        function initStudentChart() {
+            setTimeout(() => { const ctx = document.getElementById('studentAttendanceChart').getContext('2d'); if (studentAttendanceChartObj) studentAttendanceChartObj.destroy();
+                studentAttendanceChartObj = new Chart(ctx, { type: 'pie', data: { labels: ['No Data'], datasets: [{ data: [1], backgroundColor: ['#cccccc'] }] }, options: { responsive: true, maintainAspectRatio: false } });
+            }, 50);
+        }
+
+        function setESPMode() { 
+            const labId = document.getElementById('modeSelectLab').value;
+            const mode = document.querySelector('input[name="espMode"]:checked').value;
+            if (!labId) { alert("Select a lab first"); return; }
+            fetch('http://localhost:3000/api/labs/mode', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ labId, mode })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) alert('ESP mode updated!');
+                else alert('Failed: ' + data.error);
+                closeModal('espModeModal');
+            })
+            .catch(err => alert('Server error: ' + err.message));
+        }
+        function submitBugReport() { alert('Ticket logged to development backend.'); closeModal('reportBugModal'); }
+
+        // Updated logout to clear persistence
+        function logout() {
+            localStorage.removeItem('quadrodeep_session');
+            currentUser = null;
+            document.getElementById('mainInterface').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('dropdownMenu').classList.remove('active');
+            
+            // Clear inputs for security
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        window.onclick = function(event) { if (event.target.classList.contains('modal')) { event.target.classList.remove('active'); } }
+    
+        // ==========================================
+        // LAB-PROFESSOR MANAGEMENT
+        // ==========================================
+        async function loadLabProfessorModal() {
+            // Populate lab dropdown
+            const labSelect = document.getElementById('profMgmtLabSelect');
+            const profSelect = document.getElementById('profMgmtProfSelect');
+            
+            try {
+                const labRes = await fetch('http://localhost:3000/api/labs');
+                const labData = await labRes.json();
+                if (labRes.ok && labData.success) {
+                    labSelect.innerHTML = '<option value="">Select a Lab...</option>' + 
+                        labData.data.map(l => `<option value="${l.id}">${l.labName}</option>`).join('');
+                }
+            } catch (err) { console.error("Failed to load labs:", err); }
+
+            try {
+                const profRes = await fetch('http://localhost:3000/api/professors');
+                const profData = await profRes.json();
+                if (profRes.ok && profData.success) {
+                    profSelect.innerHTML = '<option value="">Select a Professor...</option>' + 
+                        profData.data.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+                }
+            } catch (err) { console.error("Failed to load professors:", err); }
+
+            await populateLabProfessorTable();
+        }
+
+        async function addLabProfessor() {
+            const labId = document.getElementById('profMgmtLabSelect').value;
+            const profId = document.getElementById('profMgmtProfSelect').value;
+
+            if (!labId || !profId) {
+                alert("Please select both a Lab and a Professor.");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/admin/lab-professors', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ labId, professorId: profId })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Professor assigned to lab successfully!');
+                    document.getElementById('profMgmtLabSelect').value = '';
+                    document.getElementById('profMgmtProfSelect').value = '';
+                    await populateLabProfessorTable();
+                } else {
+                    alert('Failed to assign professor: ' + result.error);
+                }
+            } catch (error) {
+                console.error("Assignment Error:", error);
+                alert('Server connection failed.');
+            }
+        }
+
+        async function removeLabProfessor(labId, profId) {
+            if (!confirm('Remove this professor from the lab?')) return;
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/admin/lab-professors/${labId}/${profId}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Professor removed from lab successfully!');
+                    await populateLabProfessorTable();
+                } else {
+                    alert('Failed to remove professor: ' + result.error);
+                }
+            } catch (error) {
+                console.error("Removal Error:", error);
+                alert('Server connection failed.');
+            }
+        }
+
+        // ==========================================
+        // VACATION MODE FUNCTIONS
+        // ==========================================
+        function getNextMonday() {
+            const d = new Date();
+            const day = d.getDay();
+            const diff = day === 0 ? 1 : 8 - day;
+            d.setDate(d.getDate() + diff);
+            return d;
+        }
+
+        function checkVacationStatus() {
+            fetch('http://localhost:3000/api/admin/vacation-status')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.data.active) {
+                        showVacationBanner(data.data);
+                    } else {
+                        const banner = document.getElementById('vacationBanner');
+                        if (banner) banner.remove();
+                    }
+                });
+        }
+
+        function showVacationBanner(info) {
+            if (document.getElementById('vacationBanner')) return;
+            const banner = document.createElement('div');
+            banner.id = 'vacationBanner';
+            banner.style.cssText = 'background:#fff3e0;color:#e65100;padding:12px 24px;text-align:center;font-weight:600;border-bottom:2px solid #ffcc80;z-index:9999;position:sticky;top:0;';
+            banner.innerHTML = `⚠️ VACATION MODE ACTIVE: ${info.reason || 'Institution on break'} (${info.startDate} to ${info.endDate})`;
+            document.body.insertBefore(banner, document.body.firstChild);
+        }
+
+        async function loadVacationModal() {
+            const statusDiv = document.getElementById('vacationCurrentStatus');
+            const formDiv = document.getElementById('vacationForm');
+            const activeDiv = document.getElementById('vacationActiveActions');
+
+            try {
+                const res = await fetch('http://localhost:3000/api/admin/vacation-status');
+                const data = await res.json();
+                if (data.success) {
+                    if (data.data.active) {
+                        statusDiv.innerHTML = `<strong>Vacation Active</strong><br>${data.data.reason || ''}<br>${data.data.startDate} to ${data.data.endDate}`;
+                        statusDiv.style.background = '#fff3e0';
+                        statusDiv.style.color = '#e65100';
+                        formDiv.style.display = 'none';
+                        activeDiv.style.display = 'block';
+                    } else {
+                        statusDiv.innerHTML = 'No active vacation period.';
+                        statusDiv.style.background = '#e8f5e9';
+                        statusDiv.style.color = '#2e7d32';
+                        formDiv.style.display = 'block';
+                        activeDiv.style.display = 'none';
+                        // Set default dates to next Monday-Friday
+                        const nextMon = getNextMonday();
+                        const nextFri = new Date(nextMon);
+                        nextFri.setDate(nextMon.getDate() + 4);
+                        document.getElementById('vacationStartDate').value = nextMon.toISOString().split('T')[0];
+                        document.getElementById('vacationEndDate').value = nextFri.toISOString().split('T')[0];
+                    }
+                }
+            } catch (err) { if (statusDiv) statusDiv.innerHTML = 'Failed to load status.'; }
+        }
+
+        async function startVacation() {
+            const startDate = document.getElementById('vacationStartDate').value;
+            const endDate = document.getElementById('vacationEndDate').value;
+            const reason = document.getElementById('vacationReason').value;
+            if (!startDate || !endDate) { alert('Select both dates'); return; }
+            if (new Date(startDate) > new Date(endDate)) { alert('Start date must be before end date'); return; }
+
+            try {
+                const res = await fetch('http://localhost:3000/api/admin/vacation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ startDate, endDate, reason })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Vacation mode activated!');
+                    closeModal('vacationModal');
+                    checkVacationStatus();
+                } else alert('Failed: ' + data.error);
+            } catch (err) { alert('Server error: ' + err.message); }
+        }
+
+        async function endVacation() {
+            if (!confirm('End vacation mode early?')) return;
+            try {
+                const res = await fetch('http://localhost:3000/api/admin/vacation', { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Vacation mode ended.');
+                    closeModal('vacationModal');
+                    checkVacationStatus();
+                } else alert('Failed: ' + data.error);
+            } catch (err) { alert('Server error: ' + err.message); }
+        }
+
+        function getNextMonday() {
+            const d = new Date();
+            const day = d.getDay();
+            const diff = day === 0 ? 1 : 8 - day;
+            d.setDate(d.getDate() + diff);
+            return d;
+        }
+
+        async function populateLabProfessorTable() {
+            const tbody = document.getElementById('labProfessorBody');
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px; color:#777;">Loading assignments...</td></tr>';
+
+            try {
+                const res = await fetch('http://localhost:3000/api/admin/lab-professors');
+                const data = await res.json();
+                
+                if (data.success && data.data && data.data.length > 0) {
+                    tbody.innerHTML = data.data.map(assignment => `
+                        <tr>
+                            <td>${assignment.labName}</td>
+                            <td>${assignment.professorName}</td>
+                            <td style="text-align:center;">
+                                <button onclick="removeLabProfessor('${assignment.labId}', '${assignment.professorId}')" 
+                                        class="portal-btn portal-btn-danger" 
+                                        style="padding:4px 8px; font-size:0.75rem;">Remove</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px; color:#777;">No lab-professor assignments yet.</td></tr>';
+                }
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="3" style="color:red; text-align:center; padding:20px;">Failed to load assignments.</td></tr>';
+                console.error("Error loading assignments:", err);
+            }
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+node_modules
+.opencode/
+.env
+nul
+*.zip
+*.7z
+*.rar
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+CONTEXT_DUMP.md
+lab_professor_modal.txt

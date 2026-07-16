@@ -1,0 +1,41 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  QUADRODEEP — SETUP INSTRUCTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. BACKEND SETUP
+─────────────────
+   cd backend
+   cp .env.example .env
+   # Edit .env with your Supabase & MQTT credentials
+   npm install
+   node server.js
+
+2. DATABASE
+─────────────────
+   Create a Supabase project and run the schema
+   defined in backend/templates/ (tables, indexes, RLS)
+
+3. MQTT BROKER
+─────────────────
+   Install Mosquitto (or any MQTT broker).
+   Default expects broker at 192.168.137.1:1885.
+
+4. ESP32 FIRMWARE
+─────────────────
+   Open QuadroDeep_Node/QuadroDeep_Node.ino in Arduino IDE.
+   Install libraries:
+     - MFRC522
+     - Adafruit_Fingerprint
+     - LiquidCrystal_I2C
+     - PubSubClient
+     - ArduinoJson
+   Edit QuadroDeep_Node/config.h:
+     - Set WIFI_SSID / WIFI_PASSWORD
+     - Set API_BASE to your backend URL
+     - Set MQTT_BROKER to your broker IP
+   Upload to ESP32.
+
+5. FRONTEND
+─────────────────
+   Open index.html in a browser, or serve via
+   Live Server (VSCode extension) on port 5501.
